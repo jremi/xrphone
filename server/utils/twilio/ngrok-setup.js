@@ -10,17 +10,7 @@ async function generateNgrokUrl() {
     `node ${__dirname}/autopilot-setup.js --updateActionsUrl ${url} --assistantName xrphone`
   );
   console.log(`\nTwilio urls updated!`);
-  /*
-  await updateDotenv(
-    {
-      VUE_APP_TINGZ_SERVER: url,
-    },
-    {
-      path: "../client/",
-      filename: ".env.production",
-    }
-  );
-  */
+
   await updateDotenv({
     CLIENT_APP_URL: url,
   });

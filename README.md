@@ -2,21 +2,14 @@
 ![main](https://github.com/jremi/xrphone/workflows/Deployment/badge.svg?branch=main)
 
 ## Overview
-Customers create a XRPhone account and link with XUMM wallet. Businesses create a XRPhone merchant account linking with an XRP account and XRPhone supported third-party app integration (e.g: Freshbooks, Quickbooks Online, etc).
-
-Customers pay invoices over the phone by calling the XRPhone toll-free number. They provide the merchants XRPhone number followed by the invoice number they wish to apply the payment. The XRPhone automated assistant locates the invoice and asks the customer to enter how much they wish to pay. The assistant will then get the current XRP/USD spot price and send the payment request directly to the customers XUMM wallet. 
-
-Once the customer accepts the payment request, the XRP transaction completes and automatically applies payment on the the invoice contained within the merchants connected invoice system.
-
----
-
+Customers create a XRPhone account and link with XUMM wallet. Businesses create a XRPhone merchant account linking with an XRP account and XRPhone supported third-party app integration (e.g: Freshbooks, Quickbooks Online, etc). Customers pay invoices over the phone by calling the XRPhone toll-free number. They provide the merchants XRPhone number followed by the invoice number they wish to apply the payment. The XRPhone automated assistant locates the invoice and asks the customer to enter how much they wish to pay. The assistant will then get the current XRP/USD spot price and send the payment request directly to the customers XUMM wallet. Once the customer accepts the payment request, the XRP transaction completes and automatically applies payment on the the invoice contained within the merchants connected invoice system.
 ## Tech Stack
 - Backend
   - Node.js
   - Express
 - Frontend
   - Vue.js
----
+
 ## Core Platform Dependencies
 - Supabase (https://supabase.io)
   - Database
@@ -26,7 +19,7 @@ Once the customer accepts the payment request, the XRP transaction completes and
   - Autopilot
 - XRPL (https://xrpl.org)
 - XUMM (https://xumm.app)
----
+
 ## Ripple / XRPL Labs Dependencies
 - `ripple-lib` 
   - Transaction history
@@ -38,9 +31,9 @@ Once the customer accepts the payment request, the XRP transaction completes and
 - `xpring-js` 
   - PayString lookups
 
----
 ## Current App Integrations Supported
 - Freshbooks (https://freshbooks.com)
+
 ---
 ## Development
 
@@ -78,6 +71,6 @@ $ cd server
 $ npm run start
 ```
 
-## Notes
+## Import Notes
 
 Make sure to set for the client `.env.production` and for server `.env`. The `.env.example` in both the `/server` and the `/client` folders contain all of the necessary environment variables required to make the server / client run.
