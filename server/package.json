@@ -14,7 +14,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^1.22.6",
     "axios": "^0.21.4",
-    "connect-history-api-fallback": "^1.6.0",
+    "connect-history-api-fallback": "github:jremi/connect-history-api-fallback",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
