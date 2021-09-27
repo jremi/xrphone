@@ -25,14 +25,17 @@ const app = express();
 global.transactionCache = new NodeCache({ stdTTL: 600, checkperiod: 120 });
 
 app.use(cors());
-app.use(history());
-app.use(express.static("public"));
+app.use(history({
+  htmlAcceptHeaders: ['text/html', 'application/json'],
+  ignoreRequestUrls : [ '/plugins'],
+}));
 app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
+app.use(express.static("public"));
 
 // Health Check
 app.get("/ping", (req, res) => res.json({ message: "pong" }));
