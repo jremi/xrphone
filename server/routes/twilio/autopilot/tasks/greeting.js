@@ -102,7 +102,7 @@ module.exports = async (req, res) => {
             },
           ],
           on_complete: {
-            redirect: "task://pay_invoice" // "task://main_menu",
+            redirect: "task://pay_invoice"
           },
         },
       },
