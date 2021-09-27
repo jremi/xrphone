@@ -1,19 +1,39 @@
 const { XummSdk } = require("xumm-sdk");
-const { lookupMerchantXrphoneAccount } = require("../../db/supabase");
+const {
+  updateRegularXrphoneAccount,
+  lookupMerchantXrphoneAccount,
+} = require("../../db/supabase");
 const Freshbooks = require("../../helpers/freshbooks/freshbooks-wrapper");
 
 const Sdk = new XummSdk();
 
 module.exports = async (req, res) => {
-  const { custom_meta, payloadResponse } = req.body;
-  const metadata = JSON.parse(custom_meta.blob);
+  const { custom_meta, payloadResponse, userToken } = req.body;
+  const customMeta = JSON.parse(custom_meta.blob);
 
-  console.log(metadata);
+  if (customMeta && customMeta.type) {
+    switch (customMeta.type) {
+      /*
+        NOTE: The XUMM_SIGN_IN_AGAIN is only hit via the XUMM webhook
+        when a regular (non merchant) XRPhone account is attempting to 
+        "re-connect" "re-sign-in" via the client app dasboard page.
 
-  switch (metadata.type) {
-    case "INVOICE_PAYMENT":
-      finalizeInvoicePayment();
-      break;
+        When the regular XRPhone (non merchant) XRPhone account is 
+        initially being setup/created during onboarding registration
+        the client is using the XUMM provided websocket status flow.
+      */
+      case "XUMM_SIGN_IN_AGAIN":
+        await updateRegularXrphoneAccount(
+          customMeta.customerPhoneNumber,
+          {
+            xumm_user_token: userToken.user_token,
+          }
+        );
+        break;
+      case "INVOICE_PAYMENT":
+        finalizeInvoicePayment();
+        break;
+    }
   }
 
   async function finalizeInvoicePayment() {
@@ -23,28 +43,31 @@ module.exports = async (req, res) => {
 
     if (dispatchedResult === "tesSUCCESS") {
       console.log(
-        `XUMM wallet linked to XRPhone # ${metadata.customerPhoneNumber} SUCCESSFULLY made XRP payment! (${dispatchedResult})`
+        `XUMM wallet linked to XRPhone # ${customMeta.customerPhoneNumber} SUCCESSFULLY made XRP payment! (${dispatchedResult})`
       );
-      if (metadata.merchantAppIntegration === "freshbooks") {
+      if (customMeta.merchantAppIntegration === "freshbooks") {
         const {
-          data: { phone_number, app_integration: merchantAccountAppIntegration },
-        } = await lookupMerchantXrphoneAccount(metadata.merchantPhoneNumber);
+          data: {
+            phone_number,
+            app_integration: merchantAccountAppIntegration,
+          },
+        } = await lookupMerchantXrphoneAccount(customMeta.merchantPhoneNumber);
         const freshbooks = new Freshbooks({
           phone_number,
           access_token: merchantAccountAppIntegration.access_token,
           refresh_token: merchantAccountAppIntegration.refresh_token,
         });
         await freshbooks.applyPaymentToInvoice(
-          metadata.accountId,
-          metadata.invoiceId,
-          metadata.usdAmount,
-          metadata.xrpAmount,
+          customMeta.accountId,
+          customMeta.invoiceId,
+          customMeta.usdAmount,
+          customMeta.xrpAmount,
           xrpTransactionId
         );
       }
     } else {
       console.log(
-        `XUMM wallet linked to XRPhone # ${metadata.customerPhoneNumber} DECLINED payment!`
+        `XUMM wallet linked to XRPhone # ${customMeta.customerPhoneNumber} DECLINED payment!`
       );
     }
   }

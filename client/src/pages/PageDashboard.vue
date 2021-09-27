@@ -274,16 +274,21 @@ export default {
       const left = window.top.outerWidth / 2 + window.top.screenX - width / 2;
       /**
        * Safari is blocking any call to window.open() which is made inside an async call.
-       * Creating window reference oAuthConnectWindow. Setting window reference location to 
+       * Creating window reference oAuthConnectWindow. Setting window reference location to
        * the XUMM signIn url that gets returned in promise response.
        */
-      const oAuthConnectWindow = window.open( 
+      const oAuthConnectWindow = window.open(
         "",
         "_blank",
         `toolbar=no,scrollbars=yes,resizable=no,top=${top},left=${left},width=${width},height=${height}`
       );
       this.axios
-        .get("/xumm/signin")
+        .get("/xumm/signin", {
+          params: {
+            type: "XUMM_SIGN_IN_AGAIN",
+            customerPhoneNumber: this.userSettings.phoneNumber,
+          },
+        })
         .then(({ data: signIn }) => {
           oAuthConnectWindow.location = signIn.next.always;
         })
