@@ -1,0 +1,14 @@
+.verify-phone-modal-container {
+  .confirm-container {
+    text-align: center;
+    .info {
+      margin-bottom: 1em;
+      color: $black;
+      font-weight: bold;
+    }
+    .vue-pincode-input {
+      height: 48px;
+      font-weight: bold;
+    }
+  }
+}

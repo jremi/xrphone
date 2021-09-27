@@ -1,0 +1,12 @@
+.navbar-container {
+  .logo-wrapper {
+    display: flex;
+    align-items: center;
+    .logo-letters {
+      padding-left: 6px;
+      font-size: 2.5em;
+      letter-spacing: 7px;
+      color: #dbd6d1;
+    }
+  }
+}

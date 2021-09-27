@@ -1,0 +1,26 @@
+.connect-app-container {
+  $disabled-color: #636363;
+  margin: 3em 0 6em 0;
+  text-align: center;
+  .card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 125px;
+    cursor: pointer;
+    .card-image {
+      width: 225px;
+    }
+  }
+  .card.oracle-logo {
+    background-color: $disabled-color;
+    cursor: none;
+    .card-image {
+      width: 165px;
+    }
+  }
+  .card.quickbooks-logo {
+    background-color: $disabled-color;
+    cursor: none;
+  }
+}

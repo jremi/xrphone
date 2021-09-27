@@ -1,0 +1,138 @@
+const axios = require("axios");
+const moment = require("moment");
+
+const freshbooksApi = axios.create({
+  baseURL: "https://api.freshbooks.com",
+});
+
+const { updateMerchantXrphoneAccount } = require("../../db/supabase");
+
+class Freshbooks {
+  constructor(options = {}) {
+    this.phone_number = options.phone_number || null;
+    this.access_token = options.access_token || null;
+    this.refresh_token = options.refresh_token || null;
+    freshbooksApi.interceptors.request.use(
+      (config) => {
+        config.headers["Authorization"] = `Bearer ${this.access_token}`;
+        return config;
+      },
+      (error) => {
+        Promise.reject(error);
+      }
+    );
+    freshbooksApi.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      async (error) => {
+        const originalRequest = error.config;
+        if (error.response.status === 403 && !originalRequest._retry) {
+          originalRequest._retry = true;
+          console.log('Attempting freshbooks token refresh!');
+          const { access_token } = await authAccount(
+            "refresh_token",
+            null,
+            this.refresh_token
+          );
+          freshbooksApi.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${access_token}`;
+          return freshbooksApi(originalRequest);
+        }
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  async authAccount(grantType, authCode, refreshToken) {
+    const payload = {
+      grant_type: grantType,
+      client_id: process.env.FRESHBOOKS_CLIENT_ID,
+      client_secret: process.env.FRESHBOOKS_CLIENT_SECRET,
+      redirect_uri: `${process.env.CLIENT_APP_URL}/plugins/freshbooks/oauth`,
+    };
+    if (grantType === "authorization_code") {
+      payload.code = authCode;
+    } else if (grantType === "refresh_token") {
+      payload.refresh_token = refreshToken;
+    }
+    const { data } = await freshbooksApi.post("/auth/oauth/token", payload);
+    this.access_token = data.access_token;
+    this.refresh_token = data.refresh_token;
+    if (grantType === "refresh_token") {
+      if (this.phone_number) {
+        console.log('Updating database with freshbooks new tokens!')
+        updateMerchantXrphoneAccount(phoneNumber, {
+          app_integration: {
+            id: "freshbooks",
+            access_token: this.access_token,
+            refresh_token: this.refresh_token,
+          },
+        });
+      }
+    }
+    return {
+      access_token: this.access_token,
+      refresh_token: this.refresh_token,
+    };
+  }
+
+  async getAccountId() {
+    const { data } = await freshbooksApi.get("/auth/api/v1/users/me");
+    this.accountId = data.response.roles[0].accountid; // eOjER4
+    return this.accountId;
+  }
+
+  async getCustomerIdByPhoneNumber(phoneNumber) {
+    // (NOTE): freshbooks not returning phone numbers with “-”.
+    // Users should enter the number without hyphens or we need
+    // to do extra requests to check if the number is truly not found.
+    const { data } = await freshbooksApi.get(
+      `/accounting/account/${this.accountId}/users/clients`,
+      { params: { "search[phone_like]": phoneNumber.replace(/[^\d.-]/g, "") } }
+    );
+    this.customerId = data.response.result.clients[0].id; // 105747 (customer_id)
+    return this.customerId;
+  }
+
+  async getInvoiceByInvoiceNumber(invoiceNumber) {
+    const { data } = await freshbooksApi.get(
+      `/accounting/account/${this.accountId}/invoices/invoices`,
+      { params: { "search[customerid]": this.customerId } }
+    );
+    if (data.response.result && data.response.result.invoices.length) {
+      const invoice = data.response.result.invoices.find(
+        (invoice) => invoice.invoice_number == invoiceNumber
+      );
+      this.invoice = invoice;
+      return this.invoice;
+    }
+  }
+
+  async applyPaymentToInvoice(
+    accountId,
+    invoiceId,
+    usdAmount,
+    xrpAmount,
+    xrpTransactionId
+  ) {
+    const { data } = await freshbooksApi.post(
+      `/accounting/account/${accountId}/payments/payments`,
+      {
+        payment: {
+          invoiceid: invoiceId, // 55438,
+          amount: {
+            amount: usdAmount, // "32.00",
+          },
+          date: moment().format("YYYY-MM-DD"), // "2021-09-19",
+          type: "Cash",
+          note: `Paid (${xrpAmount} XRP) via XRPhone`, // (XRPL Transaction #${xrpTransactionId})`,
+        },
+      }
+    );
+    return data.response.result.payment;
+  }
+}
+
+module.exports = Freshbooks;

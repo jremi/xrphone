@@ -1,0 +1,27 @@
+#page-dashboard-container {
+  width: 100%;
+  height: 100%;
+  margin-top: 6em;
+  .tab-content {
+    background-color: $white;
+  }
+  .tabs {
+    font-weight: bold;
+  }
+  .xrp-account {
+    font-size: 0.9em !important;
+  }
+  .app-integration-logo {
+    width: 240px;
+  }
+  .connect-app-container  {
+    margin: 0;
+  }
+  @media only screen and (max-width: 600px) {
+    table {
+      td {
+        font-size: 0.75em;
+      }
+    }
+  }
+}

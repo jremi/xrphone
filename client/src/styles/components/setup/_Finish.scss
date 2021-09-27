@@ -1,0 +1,38 @@
+.finish-container {
+  text-align: center;
+  svg {
+    width: 100px;
+    display: block;
+    margin: 40px auto 0;
+  }
+  .path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+  }
+  .path.circle {
+    animation: dash .9s ease-in-out;
+  }
+  
+  .path.check {
+    stroke-dashoffset: -100;
+    animation: check 3s ease-in infinite;
+  }
+  
+  p {
+    text-align: center;
+    margin: 20px 0 40px;
+    font-size: 1.25em;
+  }
+  p.success {
+    color: #15F3A8;
+  }
+  
+  @keyframes check {
+    0% {
+      stroke-dashoffset: -100;
+    }
+    100% {
+      stroke-dashoffset: 900;
+    }
+  }
+}
