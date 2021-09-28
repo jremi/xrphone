@@ -98,7 +98,14 @@
             </div>
 
             <b-field label="XRP Account">
-              <div class="xrp-account">{{ userSettings.xrpAccount }}</div>
+              <b-input
+                v-if="isMerchantAccount"
+                v-model="userSettings.xrpAccount"
+                placeholder="XRP Address"
+              />
+              <div v-else class="xrp-account">
+                {{ userSettings.xrpAccount }}
+              </div>
             </b-field>
             <b-field label="XRPL Network">
               <XrplNetworkSelect
@@ -331,6 +338,19 @@ export default {
       });
     },
     async saveSettings() {
+      if (this.isMerchantAccount) {
+        if (
+          this.userSettings.xrpAccount.length < 25 ||
+          this.userSettings.xrpAccount.length > 35
+        ) {
+          this.showNotification(
+            "is-danger",
+            `The XRP account you entered does not appear valid. 
+            XRP accounts are between 25 and 35 characters in length.`
+          );
+          return;
+        }
+      }
       this.isLoading = true;
       await this.axios.patch("/user/settings", this.userSettings);
       this.isLoading = false;

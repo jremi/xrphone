@@ -148,6 +148,7 @@ routes.patch("/settings", authRequired, async (req, res) => {
     res.json(settingsModel(settings));
   } else if (accountType === "merchant") {
     const payload = {
+      xrp_account: req.body.xrpAccount,
       xrpl_network: req.body.xrplNetwork,
     };
     // Merchant disconnected app integration
