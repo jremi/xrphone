@@ -44,12 +44,13 @@ module.exports = async (req, res) => {
           questions: [
             {
               question:
-                "Please enter the merchants XRP Phone number including the country and area code followed by the pound sign.",
+                "Please say or enter the merchants XRP Phone number including the country and area code followed by the pound sign.",
               name: "xrphone_merchant_phone_number",
-              type: "Twilio.NUMBER",
+              type: "Twilio.NUMBER_SEQUENCE",
               voice_digits: {
                 finish_on_key: '#',
               },
+              barge: false,
               validate: {
                 webhook: {
                   url: `${process.env.CLIENT_APP_URL}/twilio/autopilot/tasks/action/collect/question/webhook`,
@@ -73,12 +74,13 @@ module.exports = async (req, res) => {
             },
             {
               question:
-                "Please enter the invoice number followed by pound key.",
+                "Please say or enter the invoice number followed by pound key.",
               name: "xrphone_merchant_invoice_number",
-              type: "Twilio.NUMBER",
+              type: "Twilio.ALPHANUMERIC",
               voice_digits: {
                 finish_on_key: '#',
               },
+              barge: false,
               validate: {
                 webhook: {
                   url: `${process.env.CLIENT_APP_URL}/twilio/autopilot/tasks/action/collect/question/webhook`,
