@@ -1,48 +1,35 @@
 const axios = require("axios");
+const { default: createAuthRefreshInterceptor } = require("axios-auth-refresh");
 const moment = require("moment");
 
+const freshbooksBaseURL = "https://api.freshbooks.com";
+
 const freshbooksApi = axios.create({
-  baseURL: "https://api.freshbooks.com",
+  baseURL: freshbooksBaseURL,
 });
 
 const { updateMerchantXrphoneAccount } = require("../../db/supabase");
-
 class Freshbooks {
   constructor(options = {}) {
     this.phone_number = options.phone_number || null;
     this.access_token = options.access_token || null;
     this.refresh_token = options.refresh_token || null;
-    freshbooksApi.interceptors.request.use(
-      (config) => {
-        config.headers["Authorization"] = `Bearer ${this.access_token}`;
-        return config;
-      },
-      (error) => {
-        Promise.reject(error);
-      }
-    );
-    freshbooksApi.interceptors.response.use(
-      (response) => {
-        return response;
-      },
-      async (error) => {
-        const originalRequest = error.config;
-        if (error.response.status === 403 && !originalRequest._retry) {
-          originalRequest._retry = true;
-          console.log('Attempting freshbooks token refresh!');
-          const { access_token } = await authAccount(
-            "refresh_token",
-            null,
-            this.refresh_token
-          );
-          freshbooksApi.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${access_token}`;
-          return freshbooksApi(originalRequest);
-        }
-        return Promise.reject(error);
-      }
-    );
+    freshbooksApi.interceptors.request.use((request) => {
+      request.headers["Authorization"] = `Bearer ${this.access_token}`;
+      return request;
+    });
+    createAuthRefreshInterceptor(freshbooksApi, this.authRefresh.bind(this));
+  }
+
+  async authRefresh(failedRequest) {
+    const {
+      access_token: updatedAccessToken,
+      refresh_token: updatedRefreshToken,
+    } = await this.authAccount("refresh_token", null, this.refresh_token);
+    failedRequest.response.config.headers[
+      "Authorization"
+    ] = `Bearer ${updatedAccessToken}`;
+    return Promise.resolve();
   }
 
   async authAccount(grantType, authCode, refreshToken) {
@@ -57,13 +44,16 @@ class Freshbooks {
     } else if (grantType === "refresh_token") {
       payload.refresh_token = refreshToken;
     }
-    const { data } = await freshbooksApi.post("/auth/oauth/token", payload);
+    const { data } = await axios
+      .post(`${freshbooksBaseURL}/auth/oauth/token`, payload)
+      .catch((err) =>
+        console.log("Problem fetching freshbooks oAuth token!", err.message)
+      );
     this.access_token = data.access_token;
     this.refresh_token = data.refresh_token;
     if (grantType === "refresh_token") {
       if (this.phone_number) {
-        console.log('Updating database with freshbooks new tokens!')
-        updateMerchantXrphoneAccount(phoneNumber, {
+        await updateMerchantXrphoneAccount(this.phone_number, {
           app_integration: {
             id: "freshbooks",
             access_token: this.access_token,
