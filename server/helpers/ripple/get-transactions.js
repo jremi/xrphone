@@ -31,7 +31,7 @@ async function getTransactions(xrpAddress, xrplNetwork) {
     .map((txn) => ({
       sourceAddress: txn.specification.source.address,
       destinationAddress: txn.specification.destination.address,
-      timestamp: moment(txn.outcome.timestamp).format("MM/DD/YY - h:mm A"),
+      timestamp:txn.outcome.timestamp,
       deliveredAmount: `${txn.outcome.deliveredAmount.value} ${txn.outcome.deliveredAmount.currency}`,
       memo: txn.specification.memos[0].data,
       xrplExplorer:

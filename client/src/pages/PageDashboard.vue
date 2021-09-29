@@ -17,7 +17,7 @@
                 label="Date/Time"
                 v-slot="props"
               >
-                {{ props.row.timestamp }}
+                {{ props.row.timestamp | moment('MM/DD/YYYY - hh:mm A') }}
               </b-table-column>
               <b-table-column
                 :field="
