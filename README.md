@@ -1,7 +1,7 @@
 # 📱 **XRPhone** 
 # Pay invoices over the phone with the digital asset XRP
 
-![main]*(https://github.com/jremi/xrphone/workflows/Deployment/badge.svg?branch=main)
+![main](https://github.com/jremi/xrphone/workflows/Deployment/badge.svg?branch=main)
 
 ## Current Version
 ℹ️ **Alpha proof of concept.**  
