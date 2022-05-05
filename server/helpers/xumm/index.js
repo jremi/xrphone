@@ -2,6 +2,7 @@ module.exports = {
   signIn: require("./sign-in"),
   signInVerify: require("./sign-in-verify"),
   sendPayment: require("./send-payment"),
+  userTokenVerify: require("./user-token-verify")
 };
 
 // (async () => {

@@ -1,0 +1,19 @@
+.snotify-confirm {
+  background-color: #3052ff;
+}
+
+$intl-tel-input-build-img-path: "../../node_modules/intl-tel-input/build/img/";
+
+.iti__flag {
+  background-image: url($intl-tel-input-build-img-path+"flags.png");
+}
+
+.iti__country-name {
+  color: black;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .iti__flag {
+    background-image: url($intl-tel-input-build-img-path+"flags@2x.png");
+  }
+}

@@ -5,6 +5,8 @@ const authRequired = require("../../../middleware/auth-required");
 const getTransactions = require("../../../helpers/ripple/get-transactions");
 
 const {
+  lookupRegularXrphoneAccountByXrpAddress,
+  lookupMerchantXrphoneAccountByXrpAddress,
   lookupRegularXrphoneAccount,
   lookupMerchantXrphoneAccount,
   createRegularXrphoneAccount,
@@ -34,6 +36,18 @@ routes.get("/lookup", async (req, res) => {
       accountFound: !!merchantAccount,
     });
   }
+});
+
+routes.get("/lookup-by-xrp-account", async (req, res) => {
+  const { xrp_account, xrpl_network } = req.query;
+  const [regular, merchant] = await Promise.all([
+    lookupRegularXrphoneAccountByXrpAddress(xrp_account, xrpl_network),
+    lookupMerchantXrphoneAccountByXrpAddress(xrp_account, xrpl_network),
+  ]);
+  res.json({
+    regular: regular.data,
+    merchant: merchant.data,
+  });
 });
 
 routes.post("/signin", async (req, res) => {
@@ -161,6 +175,17 @@ routes.patch("/settings", authRequired, async (req, res) => {
     );
     res.json(settingsModel(settings));
   }
+});
+
+routes.post("/regular/update", authRequired, async (req, res) => {
+  const { phoneNumber } = req.user;
+  console.log(phoneNumber, req.body);
+  const { data: settings } = await updateRegularXrphoneAccount(
+    phoneNumber,
+    req.body
+  );
+  console.log(settings);
+  return res.json(settings ? settingsModel(settings) : {});
 });
 
 routes.delete("/", authRequired, async (req, res) => {

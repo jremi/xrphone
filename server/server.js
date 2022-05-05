@@ -11,7 +11,8 @@ const history = require("connect-history-api-fallback");
 const userRoutes = require("./routes/xrphone/user");
 const freshbooksOauth = require("./routes/freshbooks/oauth");
 const xummWebhookCallback = require("./routes/xumm/webhook-callback");
-const { signIn, signInVerify } = require("./helpers/xumm");
+const { signIn, signInVerify, userTokenVerify } = require("./helpers/xumm");
+const { xAppOtt, xAppPush, xAppEvent } = require("./helpers/xumm/xapp");
 const paystringVerify = require("./routes/paystring/paystring-verify");
 const autopilot = require("./routes/twilio/autopilot");
 const verifyResponse = require("./routes/twilio/autopilot/collect/verify-response");
@@ -25,10 +26,12 @@ const app = express();
 global.transactionCache = new NodeCache({ stdTTL: 600, checkperiod: 120 });
 
 app.use(cors());
-app.use(history({
-  htmlAcceptHeaders: ['text/html', 'application/json'],
-  ignoreRequestUrls : [ '/plugins'],
-}));
+// app.use(
+//   history({
+//     htmlAcceptHeaders: ["text/html", "application/json"],
+//     ignoreRequestUrls: ["/plugins"],
+//   })
+// );
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -53,11 +56,20 @@ app.post(
   verifyResponse
 );
 
+app.get('/dial', (req, res) => {
+  res.status(301).redirect(`tel://${req.query.phone}`); 
+});
+
 // XUMM Wallet
 app.get("/xumm/signin", signIn);
 app.post("/xumm/signin/verify", signInVerify);
 app.post("/xumm/webhook/callback", xummWebhookCallback);
+app.post("/xumm/usertoken/verify", userTokenVerify);
 
+// XUMM Wallet - xApp
+app.post("/xumm/xapp/ott", xAppOtt);
+app.post("/xumm/xapp/push", xAppPush);
+app.post("/xumm/xapp/event", xAppEvent);
 // PayString Verify Address
 app.post("/paystring/verify", paystringVerify);
 
@@ -78,10 +90,6 @@ app.listen(PORT, () => {
     `  - Local:   ${chalk.cyan(`http://localhost:${chalk.bold(PORT)}/`)}`
   );
   console.log(
-    `  - Network: ${chalk.cyan(
-      `${process.env.CLIENT_APP_URL}:${chalk.bold(
-        process.env.CLIENT_APP_URL.includes("https") ? "443" : "80"
-      )}/`
-    )}\n`
+    `  - Network: ${chalk.cyan(`https://xrphone-server-tunnel.ngrok.io/`)}\n`
   );
 });

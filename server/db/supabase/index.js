@@ -85,17 +85,48 @@ const updateMerchantXrphoneAccount = async (phone_number, payload) =>
     .eq("phone_number", phone_number);
 
 /**
+ * Lookup (Regular) XRPhone Account *by XRP Address*
+ *
+ * @param {string} xrp_account - The xrp account of regular XRPhone account holder.
+ * @returns {Promise} - Promise object representing regular XRPhone account
+ */
+const lookupRegularXrphoneAccountByXrpAddress = async (
+  xrp_account,
+  xrpl_network
+) =>
+  await supabase
+    .from("account_regular")
+    .select()
+    .single()
+    .match({ xrp_account: xrp_account, xrpl_network: xrpl_network });
+
+/**
+ * Lookup (Merchant) XRPhone Account *by XRP Address*
+ *
+ * @param {string} xrp_account - The xrp account of regular XRPhone account holder.
+ * @returns {Promise} - Promise object representing regular XRPhone account
+ */
+const lookupMerchantXrphoneAccountByXrpAddress = async (
+  xrp_account,
+  xrpl_network
+) =>
+  await supabase
+    .from("account_merchant")
+    .select()
+    .single()
+    .match({ xrp_account: xrp_account, xrpl_network: xrpl_network });
+
+/**
  * Lookup (Regular) XRPhone Account
  *
  * @param {string} phone_number - The phone number of regular XRPhone account holder.
  * @returns {Promise} - Promise object representing regular XRPhone account
  */
-const lookupRegularXrphoneAccount = async (phone_number) =>
+const lookupRegularXrphoneAccount = async (xrp_account, xrpl_network) =>
   await supabase
     .from("account_regular")
     .select()
-    .single()
-    .eq("phone_number", phone_number);
+    .match({ xrp_account: xrp_account, xrpl_network: xrpl_network });
 
 /**
  * Lookup (Merchant) XRPhone Account
@@ -103,12 +134,13 @@ const lookupRegularXrphoneAccount = async (phone_number) =>
  * @param {string} phone_number - The phone number of merchant XRPhone account holder.
  * @returns {Promise} - Promise object representing merchant XRPhone account
  */
-const lookupMerchantXrphoneAccount = async (phone_number) =>
-  await supabase
+const lookupMerchantXrphoneAccount = async (phone_number) => {
+  return await supabase
     .from("account_merchant")
     .select()
     .single()
     .eq("phone_number", phone_number);
+};
 
 /**
  * Delete (Regular) XRPhone Account
@@ -139,6 +171,8 @@ module.exports = {
   createMerchantXrphoneAccount,
   updateRegularXrphoneAccount,
   updateMerchantXrphoneAccount,
+  lookupRegularXrphoneAccountByXrpAddress,
+  lookupMerchantXrphoneAccountByXrpAddress,
   lookupRegularXrphoneAccount,
   lookupMerchantXrphoneAccount,
   deleteRegularXrphoneAccount,

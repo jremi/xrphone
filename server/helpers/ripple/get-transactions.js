@@ -29,6 +29,7 @@ async function getTransactions(xrpAddress, xrplNetwork) {
       }
     })
     .map((txn) => ({
+      txnId: txn.id,
       sourceAddress: txn.specification.source.address,
       destinationAddress: txn.specification.destination.address,
       timestamp:txn.outcome.timestamp,

@@ -1,0 +1,106 @@
+/**
+ * https://xumm.readme.io/docs/xapp-style-guide
+*/
+$Blue: #3052ff;
+$Orange: #f8bf4c;
+$Green: #3bdc96;
+$Red: #ff5b5b;
+$Black: #000000;
+$White: #ffffff;
+$Grey: #606885;
+$Silver: #acb1c1;
+$Light: #f8fafd;
+$Moonlight: #181a21;
+$Royal: #030b36;
+$lightBlue: rgba($Blue, 0.06);
+$lightOrange: rgba($Orange, 0.06);
+$lightGreen: rgba($Green, 0.06);
+$lightRed: rgba($Red, 0.06);
+$BlackOpacity: rgba($Black, 0.7);
+$BlueOpacity: rgba($Blue, 0.7);
+
+// XUMM xApps font-family (proxima-nova, sans-serif)
+@import url(//use.typekit.net/vtt7ckl.css);
+
+// Bootstrap icons
+@import url("//cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css");
+
+@mixin xapp-style-background($backgroundColor) {
+  .background {
+    background-color: $backgroundColor;
+  }
+}
+
+@mixin xapp-style-tint($tintBackgroundColor, $opacity) {
+  .tint {
+    background-color: rgba($tintBackgroundColor, $opacity);
+    border-radius: 16px;
+  }
+}
+
+@mixin xapp-style-text($textColorPrimary, $textColorSecondary) {
+  .text-primary {
+    color: $textColorPrimary !important;
+  }
+  .text-secondary {
+    color: $textColorSecondary !important;
+  }
+}
+
+@mixin xapp-style-button($opacity) {
+  button.btn {
+    font-family: "proxima-nova-condensed", sans-serif;
+    font-weight: bold;
+    &.btn-primary {
+      border: $lightBlue;
+      background-color: $lightBlue;
+      color: $Blue;
+    }
+    &.btn-success {
+      border: $lightGreen;
+      background-color: $lightGreen;
+      color: $Green;
+    }
+    &.btn-warning {
+      border: $lightOrange;
+      background-color: $lightOrange;
+      color: $Orange;
+    }
+    &.btn-danger {
+      border: $lightRed;
+      background-color: $lightRed;
+      color: $Red;
+    }
+  }
+}
+
+* {
+  font-family: "proxima-nova", sans-serif;
+}
+
+.xapp-theme {
+  &-light {
+    @include xapp-style-background($White);
+    @include xapp-style-tint($Light, 1);
+    @include xapp-style-text($Black, $Grey);
+    @include xapp-style-button(0.06);
+  }
+  &-dark {
+    @include xapp-style-background($Black);
+    @include xapp-style-tint($Grey, 0.25);
+    @include xapp-style-text($White, $Silver);
+    @include xapp-style-button(0.22);
+  }
+  &-moonlight {
+    @include xapp-style-background($Moonlight);
+    @include xapp-style-tint($Grey, 0.19);
+    @include xapp-style-text($White, $Silver);
+    @include xapp-style-button(0.17);
+  }
+  &-royal {
+    @include xapp-style-background($Royal);
+    @include xapp-style-tint($Grey, 0.22);
+    @include xapp-style-text($White, $Silver);
+    @include xapp-style-button(0.17);
+  }
+}
