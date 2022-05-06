@@ -122,11 +122,12 @@ const lookupMerchantXrphoneAccountByXrpAddress = async (
  * @param {string} phone_number - The phone number of regular XRPhone account holder.
  * @returns {Promise} - Promise object representing regular XRPhone account
  */
-const lookupRegularXrphoneAccount = async (xrp_account, xrpl_network) =>
+const lookupRegularXrphoneAccount = async (phone_number) =>
   await supabase
     .from("account_regular")
     .select()
-    .match({ xrp_account: xrp_account, xrpl_network: xrpl_network });
+    .single()
+    .eq("phone_number", phone_number);
 
 /**
  * Lookup (Merchant) XRPhone Account
