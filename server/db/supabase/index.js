@@ -34,6 +34,7 @@ const createRegularXrphoneAccount = async (
  *
  * @param {string} phone_number - The phone number of merchant XRPhone account holder.
  * @param {string} xrp_account - The XRP account number of account holder.
+ * @param {string} destination_tag - The (optional) destination tag of account if on CEX.
  * @param {string} xrpl_network - The XRPL network for XRP account number of account holder.
  * @param {Object} app_integration - The app integration used with merchant XRPhone account.
  * @param {string} app_integration.id - The identifier of the app integration.
@@ -44,6 +45,7 @@ const createRegularXrphoneAccount = async (
 const createMerchantXrphoneAccount = async (
   phone_number,
   xrp_account,
+  destination_tag,
   xrpl_network,
   app_integration
 ) =>
@@ -51,6 +53,7 @@ const createMerchantXrphoneAccount = async (
     {
       phone_number,
       xrp_account,
+      destination_tag,
       xrpl_network,
       app_integration,
     },

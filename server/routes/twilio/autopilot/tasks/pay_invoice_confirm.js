@@ -7,6 +7,7 @@ module.exports = async (req, res) => {
     memory.regularAccountHolder;
   const {
     xrp_account: merchantXrpAccount,
+    destination_tag: merchantDestinationTag,
     phone_number: merchantPhoneNumber,
     app_integration: merchantAppIntegration,
   } = memory.merchantAccountHolder;
@@ -18,7 +19,7 @@ module.exports = async (req, res) => {
     parseFloat(usdAmountToPay) / currentXrpUsdSpotPrice
   ).toFixed(2);
 
-  await sendXummPaymentToCaller(xummUserToken, merchantXrpAccount, xrpAmount, {
+  await sendXummPaymentToCaller(xummUserToken, merchantXrpAccount, merchantDestinationTag, xrpAmount, {
     type: "INVOICE_PAYMENT",
     xrpAmount,
     usdAmount: usdAmountToPay,

@@ -16,14 +16,25 @@ module.exports = async (req, res) => {
   await freshbooks.authAccount("authorization_code", req.query.code);
 
   if (freshbooks.access_token) {
-    const { isMerchantInitialSetup, phoneNumber, xrpAccount, xrplNetwork } =
-      JSON.parse(decodeURIComponent(req.query.state));
+    const {
+      isMerchantInitialSetup,
+      phoneNumber,
+      xrpAccount,
+      destinationTag,
+      xrplNetwork,
+    } = JSON.parse(decodeURIComponent(req.query.state));
     if (isMerchantInitialSetup) {
-      await createMerchantXrphoneAccount(phoneNumber, xrpAccount, xrplNetwork, {
-        id: "freshbooks",
-        access_token: freshbooks.access_token,
-        refresh_token: freshbooks.refresh_token,
-      });
+      await createMerchantXrphoneAccount(
+        phoneNumber,
+        xrpAccount,
+        destinationTag,
+        xrplNetwork,
+        {
+          id: "freshbooks",
+          access_token: freshbooks.access_token,
+          refresh_token: freshbooks.refresh_token,
+        }
+      );
       res.send(htmlTemplate);
     } else {
       await updateMerchantXrphoneAccount(phoneNumber, {

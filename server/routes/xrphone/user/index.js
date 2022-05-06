@@ -134,6 +134,7 @@ const settingsModel = (account) => ({
   createdAt: account.created_at,
   phoneNumber: account.phone_number,
   xrpAccount: account.xrp_account,
+  destinationTag: account.destination_tag, // Used only for the accountType merchant 
   xrplNetwork: account.xrpl_network,
 });
 
@@ -163,6 +164,7 @@ routes.patch("/settings", authRequired, async (req, res) => {
   } else if (accountType === "merchant") {
     const payload = {
       xrp_account: req.body.xrpAccount,
+      destination_tag: req.body.destinationTag,
       xrpl_network: req.body.xrplNetwork,
     };
     // Merchant disconnected app integration

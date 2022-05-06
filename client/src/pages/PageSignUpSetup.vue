@@ -50,6 +50,7 @@
               :phoneNumber="userSetup.phoneNumber"
               :xrplNetwork="userSetup.xrplNetwork"
               :xrpAccount="merchantSetup.xrpAccount"
+              :destinationTag="merchantSetup.destinationTag"
               @onConnectAppCompleted="onConnectAppCompleted"
             />
           </b-step-item>
@@ -94,6 +95,7 @@ export default {
       },
       merchantSetup: {
         xrpAccount: null,
+        destinationTag: null,
       },
       xummWalletSignIn: {},
       activeStep: 0,
@@ -160,9 +162,10 @@ export default {
         });
       }
     },
-    onMerchantXrpAccountProvided({ xrpAccount, xrplNetwork }) {
+    onMerchantXrpAccountProvided({ xrpAccount, xrplNetwork, destinationTag }) {
       this.userSetup.xrplNetwork = xrplNetwork;
       this.merchantSetup.xrpAccount = xrpAccount;
+      this.merchantSetup.destinationTag = destinationTag;
       this.activeStep += 1; // Go to: Connect Plugin step
     },
     onConnectAppCompleted() {

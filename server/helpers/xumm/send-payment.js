@@ -6,6 +6,7 @@ const Sdk = new XummSdk();
 module.exports = function (
   xummUserToken,
   merchantXrpAccount,
+  merchantDestinationTag,
   xrpAmount,
   metadata = {
     usdAmount: null,
@@ -22,6 +23,9 @@ module.exports = function (
           txjson: {
             TransactionType: "Payment",
             Destination: merchantXrpAccount,
+            DestinationTag: merchantDestinationTag
+              ? parseInt(merchantDestinationTag)
+              : null,
             Amount: xrpToDrops(xrpAmount),
             Memos: [
               {

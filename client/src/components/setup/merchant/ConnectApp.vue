@@ -38,7 +38,7 @@ export default {
     isMerchantInitialSetup: {
       type: Boolean,
       default: false,
-      required: false  
+      required: false,
     },
     phoneNumber: {
       type: String,
@@ -52,6 +52,10 @@ export default {
       type: String,
       required: false,
     },
+    destinationTag: {
+      type: String,
+      required: false,
+    },
     hideTitle: {
       type: Boolean,
       default: false,
@@ -60,8 +64,6 @@ export default {
   },
   data() {
     return {
-      app: null,
-      selectedappOAuthUrl: null,
       availableAppIntegrations: [
         {
           id: "freshbooks",
@@ -94,6 +96,7 @@ export default {
         phoneNumber: this.phoneNumber,
         xrplNetwork: this.xrplNetwork,
         xrpAccount: this.xrpAccount,
+        destinationTag: this.destinationTag,
       };
     },
   },
@@ -104,6 +107,12 @@ export default {
       const width = 400;
       const top = window.top.outerHeight / 2 + window.top.screenY - height / 2;
       const left = window.top.outerWidth / 2 + window.top.screenX - width / 2;
+      /*
+        https://auth.freshbooks.com/service/auth/oauth/authorize
+          ?client_id=e41c15d9dab6c60dab43c0e5e12da18aef787a3dc2764711fa63eb9c6d19212c
+          &response_type=code
+          &redirect_uri=https://xrphone-server-tunnel.ngrok.io/plugins/freshbooks/oauth
+      */
       const oauthWindow = window.open(
         `${app.authUrl}&state=${state}`,
         "_blank",

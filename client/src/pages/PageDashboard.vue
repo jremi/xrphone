@@ -17,7 +17,7 @@
                 label="Date/Time"
                 v-slot="props"
               >
-                {{ props.row.timestamp | moment('MM/DD/YYYY - hh:mm A') }}
+                {{ props.row.timestamp | moment("MM/DD/YYYY - hh:mm A") }}
               </b-table-column>
               <b-table-column
                 :field="
@@ -106,6 +106,21 @@
               <div v-else class="xrp-account">
                 {{ userSettings.xrpAccount }}
               </div>
+            </b-field>
+            <b-field>
+              <b-checkbox
+                class="has-text-weight-bold"
+                v-model="isCentralizedExchange"
+              >
+                Account on CEX (e.g: Uphold, KuCoin)
+              </b-checkbox>
+            </b-field>
+            <b-field label="Destination Tag" v-if="isCentralizedExchange">
+              <b-input
+                v-model="userSettings.destinationTag"
+                placeholder="Destination Tag"
+                icon="tag"
+              />
             </b-field>
             <b-field label="XRPL Network">
               <XrplNetworkSelect
@@ -212,6 +227,7 @@ export default {
       activeTab: 0,
       paidInvoices: [],
       userSettings: {},
+      isCentralizedExchange: false,
       backgroundPoller: {
         paidInvoices: null,
       },
@@ -272,6 +288,9 @@ export default {
     getSettings() {
       this.axios.get("/user/settings").then(({ data: userSettings }) => {
         this.userSettings = userSettings;
+        if (userSettings.destinationTag) {
+          this.isCentralizedExchange = true;
+        }
       });
     },
     xummSignIn() {
@@ -349,6 +368,17 @@ export default {
             XRP accounts are between 25 and 35 characters in length.`
           );
           return;
+        }
+        if (this.isCentralizedExchange) {
+          if (this.userSettings.destinationTag.length < 1) {
+            this.showNotification(
+              "is-danger",
+              "The destination tag is required!"
+            );
+            return;
+          }
+        } else {
+          this.userSettings.destinationTag = null;
         }
       }
       this.isLoading = true;
