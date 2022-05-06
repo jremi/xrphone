@@ -179,7 +179,6 @@ routes.patch("/settings", authRequired, async (req, res) => {
 
 routes.post("/regular/update", authRequired, async (req, res) => {
   const { phoneNumber } = req.user;
-  console.log(phoneNumber, req.body);
   const { data: settings } = await updateRegularXrphoneAccount(
     phoneNumber,
     req.body
