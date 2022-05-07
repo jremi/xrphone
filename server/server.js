@@ -90,6 +90,6 @@ app.listen(PORT, () => {
     `  - Local:   ${chalk.cyan(`http://localhost:${chalk.bold(PORT)}/`)}`
   );
   console.log(
-    `  - Network: ${chalk.cyan(`https://xrphone-server-tunnel.ngrok.io/`)}\n`
+    `  - Network: ${chalk.cyan(`${process.env.SERVER_URL}/`)}\n`
   );
 });
