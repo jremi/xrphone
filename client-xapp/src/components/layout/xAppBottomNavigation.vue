@@ -54,7 +54,6 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  z-index: -1;
   .navigation-item {
     display: flex;
     flex-direction: column;

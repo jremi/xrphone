@@ -122,10 +122,6 @@ export default {
       width: 60px;
       border-radius: 50%;
       z-index: 1;
-      animation-name: spin;
-      animation-duration: 300ms;
-      animation-iteration-count: 3;
-      animation-timing-function: linear;
     }
   }
   .info {

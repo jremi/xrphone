@@ -91,6 +91,7 @@ export default {
 <style lang="scss" scoped>
 .xapp-page-payments {
   table {
+    margin-bottom: 4rem;
     tr {
       td:first-child {
         font-size: 0.75rem;

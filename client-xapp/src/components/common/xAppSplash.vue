@@ -1,6 +1,6 @@
 <template>
   <div class="xapp-splash background" v-show="xrphone.showSplash">
-    <img src="@/assets/images/logos/xrphone-app-logo-white.png" alt="Logo" />
+    <img :src="logo" />
     <div class="wordmark">XRPhone</div>
     <transition name="bounce">
       <div v-if="showSignInButton" class="not-signed-in tint text-primary">
@@ -27,6 +27,9 @@
 <script>
 import { mapGetters } from "vuex";
 
+import xrphoneAppLogoWhite from "@/assets/images/logos/xrphone-app-logo-white.png";
+import xrphoneAppLogoBlack from "@/assets/images/logos/xrphone-app-logo-black.png";
+
 export default {
   name: "xAppSplash",
   props: {
@@ -36,7 +39,13 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["xrphone"]),
+    ...mapGetters(["xApp", "xrphone"]),
+    logo() {
+      if (this.xApp.xAppStyle === "light") {
+        return xrphoneAppLogoBlack;
+      }
+      return xrphoneAppLogoWhite;
+    },
     showSignInButton() {
       return (
         this.userSignInStatus === "DECLINED" ||
@@ -49,13 +58,14 @@ export default {
 
 <style lang="scss">
 .xapp-splash {
-  background-color: black !important;
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: fixed;
+  z-index: 2;
   img {
     width: 110px;
     border-radius: 50%;
