@@ -1,5 +1,6 @@
 <template>
   <div id="xapp" :class="`xapp-theme-${xApp.xAppStyle}`">
+    <xAppSpinnerOverlay />
     <xAppSplash
       :userSignInStatus="userSignInStatus"
       @onSignInRequested="xrphoneSignIn"
@@ -14,6 +15,7 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 
+import xAppSpinnerOverlay from "@/components/common/xAppSpinnerOverlay";
 import xAppSplash from "@/components/common/xAppSplash";
 import xAppSetupWizard from "@/components/common/xAppSetupWizard/xAppSetupWizard";
 import xAppBottomNavigation from "@/components/layout/xAppBottomNavigation";
@@ -21,6 +23,7 @@ import xAppBottomNavigation from "@/components/layout/xAppBottomNavigation";
 export default {
   name: "xApp",
   components: {
+    xAppSpinnerOverlay,
     xAppSplash,
     xAppSetupWizard,
     xAppBottomNavigation,
@@ -31,6 +34,7 @@ export default {
     };
   },
   async mounted() {
+    this.SET_SPINNER_OVERLAY(false);
     this.SET_XRPHONE({ showSplash: true });
     this.xAppSetDefaults();
     this.xAppSetTheme();
@@ -42,6 +46,7 @@ export default {
   },
   methods: {
     ...mapMutations([
+      "SET_SPINNER_OVERLAY",
       "SET_XAPP",
       "SET_XUMM",
       "SET_XRPHONE",

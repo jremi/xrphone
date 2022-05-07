@@ -19,6 +19,7 @@ export default new Vuex.Store({
     xumm: {},
     xrphone: {
       xummUserToken: null,
+      showSpinnerOverlay: false,
       showSplash: false,
       showSetupWizard: false,
       sessionJwt: null,
@@ -34,6 +35,9 @@ export default new Vuex.Store({
     xrphone: (state) => state.xrphone,
   },
   mutations: {
+    SET_SPINNER_OVERLAY(state, showSpinnerOverlay) {
+      state.xrphone.showSpinnerOverlay = showSpinnerOverlay;
+    },
     SET_XAPP(state, xAppSettings) {
       state.xApp = { ...state.xApp, ...xAppSettings };
     },

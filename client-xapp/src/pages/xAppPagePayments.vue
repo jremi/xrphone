@@ -36,23 +36,13 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
   name: "xAppPagePayments",
   data() {
     return {
       paidInvoices: [],
-      //  [
-      //   {
-      //     timestamp: Date.now(),
-      //     txnId:
-      //       "E89B42EFC5F5C48720A6296AC29756391DFDB61DF2784A5C75BDD5FD46A8CD05",
-      //   },
-      //   {
-      //     timestamp: Date.now(),
-      //     txnId:
-      //       "E89B42EFC5F5C48720A6296AC29756391DFDB61DF2784A5C75BDD5FD46A8CD05",
-      //   },
-      // ],
       backgroundPoller: {
         paidInvoices: null,
       },
@@ -65,18 +55,25 @@ export default {
       10000
     );
   },
+  mounted() {
+    this.SET_SPINNER_OVERLAY(true);
+  },
   beforeDestroy() {
+    this.SET_SPINNER_OVERLAY(false);
     clearInterval(this.backgroundPoller.paidInvoices);
   },
   computed: {
+    ...mapGetters(["xumm", "xrphone"]),
     hasPaidInvoices() {
       return this.paidInvoices?.length > 0;
     },
   },
   methods: {
+    ...mapMutations(["SET_SPINNER_OVERLAY"]),
     getPaidInvoices(cb) {
-      this.axios.get("/user/paid-invoices").then(({ data }) => {
-        this.paidInvoices = data.paidInvoices;
+      this.axios.get("/user/paid-invoices").then(({ data: paidInvoices }) => {
+        this.paidInvoices = paidInvoices;
+        this.SET_SPINNER_OVERLAY(false);
         if (cb) cb();
       });
     },
@@ -84,7 +81,7 @@ export default {
       this.$xApp.triggerAction({
         command: "txDetails",
         tx: tx,
-        account: this.$store.state.xumm.xrpAccount,
+        account: this.xumm.account,
       });
     },
   },
@@ -92,7 +89,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.xapp-view-payments {
+.xapp-page-payments {
   table {
     tr {
       td:first-child {
