@@ -37,7 +37,7 @@ class Freshbooks {
       grant_type: grantType,
       client_id: process.env.FRESHBOOKS_CLIENT_ID,
       client_secret: process.env.FRESHBOOKS_CLIENT_SECRET,
-      redirect_uri: `${process.env.CLIENT_APP_URL}/plugins/freshbooks/oauth`,
+      redirect_uri: `${process.env.SERVER_URL}/plugins/freshbooks/oauth`,
     };
     if (grantType === "authorization_code") {
       payload.code = authCode;
