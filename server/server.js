@@ -10,6 +10,7 @@ const cors = require("cors");
 const history = require("connect-history-api-fallback");
 const userRoutes = require("./routes/xrphone/user");
 const freshbooksOauth = require("./routes/freshbooks/oauth");
+const quickbooksOauth = require("./routes/quickbooks/oauth");
 const xummWebhookCallback = require("./routes/xumm/webhook-callback");
 const { signIn, signInVerify, userTokenVerify } = require("./helpers/xumm");
 const { xAppOtt, xAppPush, xAppEvent } = require("./helpers/xumm/xapp");
@@ -78,6 +79,7 @@ app.use("/user", userRoutes);
 
 // XRPhone App Integrations /  Create Merchant User
 app.get("/plugins/freshbooks/oauth", freshbooksOauth);
+app.get("/plugins/quickbooks/oauth", quickbooksOauth);
 
 // ********** Server Listener **************
 

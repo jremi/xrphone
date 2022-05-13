@@ -2,6 +2,7 @@
 
 const { lookupMerchantXrphoneAccount } = require("../../../../db/supabase");
 const Freshbooks = require("../../../../helpers/freshbooks/freshbooks-wrapper");
+const Quickbooks = require("../../../../helpers/quickbooks/quickbooks-wrapper");
 
 module.exports = async (req, res) => {
   const memory = JSON.parse(req.body["Memory"]);
@@ -52,6 +53,25 @@ module.exports = async (req, res) => {
               });
               return true;
             }
+          }
+        } catch (err) {
+          console.log("Error with invoice lookup:", err);
+        }
+      } else if (merchantAccountAppIntegration.id === 'quickbooks') {
+        const quickbooks = new Quickbooks({
+          phone_number: merchantAccountHolder.phone_number,
+          access_token: merchantAccountAppIntegration.access_token,
+          refresh_token: merchantAccountAppIntegration.refresh_token,
+          realm_id: merchantAccountAppIntegration.realm_id
+        });
+        try {
+          await quickbooks.getInvoiceByInvoiceNumber(merchantInvoiceNumber);
+          if (quickbooks.invoice) {
+            global.transactionCache.set(CallSid, {
+              merchantAccountHolder,
+              invoice: quickbooks.invoice,
+            });
+            return true;
           }
         } catch (err) {
           console.log("Error with invoice lookup:", err);

@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { default: createAuthRefreshInterceptor } = require("axios-auth-refresh");
+const { updateMerchantXrphoneAccount } = require("../../db/supabase");
 const moment = require("moment");
 
 const freshbooksBaseURL = "https://api.freshbooks.com";
@@ -8,7 +9,6 @@ const freshbooksApi = axios.create({
   baseURL: freshbooksBaseURL,
 });
 
-const { updateMerchantXrphoneAccount } = require("../../db/supabase");
 class Freshbooks {
   constructor(options = {}) {
     this.phone_number = options.phone_number || null;

@@ -162,6 +162,22 @@
                       >
                     </footer>
                   </div>
+                  <div
+                    v-if="userSettings.appIntegrationId === 'quickbooks'"
+                    class="card"
+                  >
+                    <img
+                      :src="appIntegrationLogo.quickbooks"
+                      class="app-integration-logo"
+                    />
+                    <footer class="card-footer">
+                      <a
+                        @click="disconnectAppIntegration"
+                        class="card-footer-item has-text-weight-bold"
+                        >Disconnect</a
+                      >
+                    </footer>
+                  </div>
                 </div>
               </div>
               <div v-else>
@@ -214,6 +230,7 @@ import { mapActions } from "vuex";
 import XrplNetworkSelect from "@/components/common/XrplNetworkSelect";
 import ConnectApp from "@/components/setup/merchant/ConnectApp";
 import freshbooksLogo from "@/assets/images/logos/other/freshbooks-logo.png";
+import quickbooksLogo from "@/assets/images/logos/other/quickbooks-logo.png";
 
 export default {
   name: "PageDashboard",
@@ -233,6 +250,7 @@ export default {
       },
       appIntegrationLogo: {
         freshbooks: freshbooksLogo,
+        quickbooks: quickbooksLogo,
       },
     };
   },

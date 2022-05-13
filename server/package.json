@@ -21,6 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "node-cache": "^5.1.2",
+    "qs": "^6.10.3",
     "ripple-lib": "^1.10.0",
     "twilio": "^3.67.2",
     "xpring-js": "^5.3.1",

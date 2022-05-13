@@ -4,6 +4,7 @@ const {
   lookupMerchantXrphoneAccount,
 } = require("../../db/supabase");
 const Freshbooks = require("../../helpers/freshbooks/freshbooks-wrapper");
+const Quickbooks = require("../../helpers/quickbooks/quickbooks-wrapper");
 
 const Sdk = new XummSdk();
 
@@ -58,6 +59,27 @@ module.exports = async (req, res) => {
           refresh_token: merchantAccountAppIntegration.refresh_token,
         });
         await freshbooks.applyPaymentToInvoice(
+          customMeta.accountId,
+          customMeta.invoiceId,
+          customMeta.usdAmount,
+          customMeta.xrpAmount,
+          xrpTransactionId
+        );
+      }
+      else if (customMeta.merchantAppIntegration === 'quickbooks') {
+        const {
+          data: {
+            phone_number,
+            app_integration: merchantAccountAppIntegration,
+          },
+        } = await lookupMerchantXrphoneAccount(customMeta.merchantPhoneNumber);
+        const quickbooks = new Quickbooks({
+          phone_number,
+          access_token: merchantAccountAppIntegration.access_token,
+          refresh_token: merchantAccountAppIntegration.refresh_token,
+          realm_id: merchantAccountAppIntegration.realm_id,
+        });
+        await quickbooks.applyPaymentToInvoice(
           customMeta.accountId,
           customMeta.invoiceId,
           customMeta.usdAmount,

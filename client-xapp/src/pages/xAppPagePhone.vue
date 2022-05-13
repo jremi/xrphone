@@ -105,7 +105,7 @@ export default {
       this.$xApp.triggerAction({
         command: "openBrowser",
         url: `https://xrphone-server-tunnel.ngrok.io/dial?phone=${this.xrphonePaymentNumbers.US.raw}`,
-      });
+      })
     },
   },
 };

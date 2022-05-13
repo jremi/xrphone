@@ -148,7 +148,7 @@ routes.get("/settings", authRequired, async (req, res) => {
     const { data: account } = await lookupMerchantXrphoneAccount(phoneNumber);
     settings = {
       ...settingsModel(account),
-      appIntegrationId: account.app_integration.id,
+      appIntegrationId: account.app_integration?.id
     };
   }
   res.json(settings);

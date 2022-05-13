@@ -29,7 +29,6 @@
 
 <script>
 import freshbooksLogo from "@/assets/images/logos/other/freshbooks-logo.png";
-import oracleNetSuiteLogo from "@/assets/images/logos/other/oracle-netsuite-logo.png";
 import quickbooksLogo from "@/assets/images/logos/other/quickbooks-logo.png";
 
 export default {
@@ -73,18 +72,11 @@ export default {
           authUrl: process.env.VUE_APP_INTEGRATION_FRESHBOOKS_OAUTH_URL,
         },
         {
-          id: "oracle_net_suite",
-          name: "Oracle NetSuite",
-          image: oracleNetSuiteLogo,
-          cssClass: "oracle-logo",
-          authUrl: null,
-        },
-        {
-          id: "quickbooks_online",
+          id: "quickbooks",
           name: "Quickbooks Online",
           image: quickbooksLogo,
           cssClass: "quickbooks-logo",
-          authUrl: null,
+          authUrl: process.env.VUE_APP_INTEGRATION_QUICKBOOKS_OAUTH_URL,
         },
       ],
     };
@@ -107,12 +99,6 @@ export default {
       const width = 400;
       const top = window.top.outerHeight / 2 + window.top.screenY - height / 2;
       const left = window.top.outerWidth / 2 + window.top.screenX - width / 2;
-      /*
-        https://auth.freshbooks.com/service/auth/oauth/authorize
-          ?client_id=e41c15d9dab6c60dab43c0e5e12da18aef787a3dc2764711fa63eb9c6d19212c
-          &response_type=code
-          &redirect_uri=https://xrphone-server-tunnel.ngrok.io/plugins/freshbooks/oauth
-      */
       const oauthWindow = window.open(
         `${app.authUrl}&state=${state}`,
         "_blank",

@@ -9,14 +9,14 @@ const {
   updateMerchantXrphoneAccount,
 } = require("../../db/supabase");
 
-const Freshbooks = require("../../helpers/freshbooks/freshbooks-wrapper");
+const Quickbooks = require("../../helpers/quickbooks/quickbooks-wrapper");
 
 module.exports = async (req, res) => {
-  const freshbooks = new Freshbooks();
+  const quickbooks = new Quickbooks();
 
-  await freshbooks.authAccount("authorization_code", req.query.code);
+  await quickbooks.authAccount("authorization_code", req.query.code, null, req.query.realmId);
 
-  if (freshbooks.access_token) {
+  if (quickbooks.access_token) {
     const {
       isMerchantInitialSetup,
       phoneNumber,
@@ -31,18 +31,20 @@ module.exports = async (req, res) => {
         destinationTag,
         xrplNetwork,
         {
-          id: "freshbooks",
-          access_token: freshbooks.access_token,
-          refresh_token: freshbooks.refresh_token,
+          id: "quickbooks",
+          access_token: quickbooks.access_token,
+          refresh_token: quickbooks.refresh_token,
+          realm_id: quickbooks.realm_id,
         }
       );
       res.send(htmlTemplate);
     } else {
       await updateMerchantXrphoneAccount(phoneNumber, {
         app_integration: {
-          id: "freshbooks",
-          access_token: freshbooks.access_token,
-          refresh_token: freshbooks.refresh_token,
+          id: "quickbooks",
+          access_token: quickbooks.access_token,
+          refresh_token: quickbooks.refresh_token,
+          realm_id: quickbooks.realm_id,
         },
       });
       res.send(htmlTemplate);
