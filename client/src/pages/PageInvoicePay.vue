@@ -4,16 +4,26 @@
             <div v-if="pageLoadError">
                 Invoice not found
             </div>
+            <div v-else-if="showThankYou">
+                <div class="title has-text-white">Thank you for your payment!</div>
+            </div>
             <div v-else>
                 <div class="invoice-number">Invoice #{{ invoice.invoice_number }}</div>
                 <div class="outstanding-balance">
-                    Balance Due:
+                    Balance due:
                     <span class="amount">${{ invoice.outstanding.amount ? invoice.outstanding.amount.toFixed(2) : '' }}
                         {{ invoice.outstanding.code }}</span>
                 </div>
                 <div class="amount-to-pay-container mt-4">
                     <b-input custom-class="amount-to-pay-input" v-model="usdAmountToPay" size="is-large"
                         placeholder="Enter pay amount" icon="money-bill" type="number" min="1" max="999999999" />
+                </div>
+                <div class="currency-type-container mt-4 is-flex is-align-items-center is-justify-content-center">
+                    <div class="pay-with">Currency:</div>
+                    <b-select v-model="currency" placeholder="Currency" size="is-large" class="ml-4" icon="wallet">
+                        <option value="XPHO">XPHO</option>
+                        <option value="XRP">XRP</option>
+                    </b-select>
                 </div>
                 <div class="pay-with-xumm-btn" @click="payWithXumm">
                     <svg class="mt-5" xmlns="http://www.w3.org/2000/svg" width="222" height="60" viewBox="0 0 222 60"
@@ -83,6 +93,9 @@
 </template>
 
 <script>
+import { ModalProgrammatic as Modal } from 'buefy'
+import XummPayModal from '@/components/modal/XummPayModal';
+
 export default {
     name: "PageInvoicePay",
     data() {
@@ -102,6 +115,8 @@ export default {
             },
             pageLoadError: false,
             usdAmountToPay: null,
+            currency: 'XPHO',
+            showThankYou: false
         };
     },
     async created() {
@@ -141,9 +156,29 @@ export default {
                 integration: this.integration,
                 invoice: this.invoice,
                 merchant: this.merchant,
-                usdAmountToPay: +this.usdAmountToPay
+                usdAmountToPay: +this.usdAmountToPay,
+                currency: this.currency
             });
-            window.location.replace(data.next.always);
+            const { qr_png, websocket_status } = data.refs;
+            Modal.open({
+                parent: this,
+                component: XummPayModal,
+                hasModalCard: true,
+                canCancel: false,
+                props: {
+                    qr_png,
+                    websocket_status
+                },
+                events: {
+                    paid: () => {
+                        this.showThankYou = true;
+                        this.isLoading = false;
+                    },
+                    close: () => {
+                        this.isLoading = false;
+                    }
+                }
+            });
         }
     },
 };

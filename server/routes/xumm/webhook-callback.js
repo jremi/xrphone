@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
 
     if (dispatchedResult === "tesSUCCESS") {
       console.log(
-        `XUMM wallet linked to XRPhone # ${customMeta.customerPhoneNumber} SUCCESSFULLY made XRP payment! (${dispatchedResult})`
+        `XUMM wallet linked to XRPhone # ${customMeta.customerPhoneNumber} SUCCESSFULLY made payment! (${dispatchedResult})`
       );
       if (customMeta.merchantAppIntegration === "freshbooks") {
         const {
@@ -62,7 +62,9 @@ module.exports = async (req, res) => {
           customMeta.accountId,
           customMeta.invoiceId,
           customMeta.usdAmount,
+          customMeta.currency,
           customMeta.xrpAmount,
+          customMeta.xphoAmount,
           xrpTransactionId
         );
       }
@@ -83,7 +85,9 @@ module.exports = async (req, res) => {
           customMeta.accountId,
           customMeta.invoiceId,
           customMeta.usdAmount,
+          customMeta.currency,
           customMeta.xrpAmount,
+          customMeta.xphoAmount,
           xrpTransactionId
         );
       }
