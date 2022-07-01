@@ -1,28 +1,19 @@
 "use strict";
 
-const RippleAPI = require("ripple-lib").RippleAPI;
-
-const api = new RippleAPI({
-  server: "wss://s1.ripple.com",
-});
-
 // https://dev.to/wietse/aggregated-xrp-usd-price-info-on-the-xrp-ledger-1087
 
+const axios = require("axios");
 const xrplLabsPriceOracle = "rXUMMaPpZqPutoRszR29jtC8amWq3APkx";
 
-module.exports = () => {
-  return api
-    .connect()
-    .then(() => api.getTrustlines(xrplLabsPriceOracle))
-    .then((info) => {
-      // console.log(
-      //   "XRPL:oracle",
-      //   `$${info[0].specification.limit} ${info[0].specification.currency}`
-      // );
-      api.disconnect();
-      return parseFloat(info[0].specification.limit);
+module.exports = async () => {
+  const { data } = await axios.post(
+    "https://xrpl.ws",
+    JSON.stringify({
+      method: "account_lines",
+      params: [{ account: xrplLabsPriceOracle }],
     })
-    .catch((err) => {
-      console.log(err);
-    });
+  );
+  const lines = data.result.lines;
+  const xrpPrice = parseFloat(lines[0].limit);
+  return xrpPrice;
 };

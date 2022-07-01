@@ -12,6 +12,8 @@ const userRoutes = require("./routes/xrphone/user");
 const freshbooksOauth = require("./routes/freshbooks/oauth");
 const quickbooksOauth = require("./routes/quickbooks/oauth");
 const xummWebhookCallback = require("./routes/xumm/webhook-callback");
+const shareLinkInvoiceLookup = require("./routes/xrphone/share-link/invoiceLookup");
+const shareLinkInvoicePay = require("./routes/xrphone/share-link/invoicePay");
 const { signIn, signInVerify, userTokenVerify } = require("./helpers/xumm");
 const { xAppOtt, xAppPush, xAppEvent } = require("./helpers/xumm/xapp");
 const paystringVerify = require("./routes/paystring/paystring-verify");
@@ -58,7 +60,7 @@ app.post(
 );
 
 app.get('/dial', (req, res) => {
-  res.status(301).redirect(`tel://${req.query.phone}`); 
+  res.status(301).redirect(`tel://${req.query.phone}`);
 });
 
 // XUMM Wallet
@@ -76,6 +78,9 @@ app.post("/paystring/verify", paystringVerify);
 
 // XRPhone Create User / Sign In / Sign Out / Paid Invoices / Settings
 app.use("/user", userRoutes);
+
+app.post("/share-link/invoice-lookup", shareLinkInvoiceLookup);
+app.post("/share-link/invoice-pay", shareLinkInvoicePay);
 
 // XRPhone App Integrations /  Create Merchant User
 app.get("/plugins/freshbooks/oauth", freshbooksOauth);
@@ -95,3 +100,9 @@ app.listen(PORT, () => {
     `  - Network: ${chalk.cyan(`${process.env.SERVER_URL}/`)}\n`
   );
 });
+
+process.on('uncaughtException', function (err) {
+
+  // Handle the error safely
+  console.log('global uncaughtException', err);
+})

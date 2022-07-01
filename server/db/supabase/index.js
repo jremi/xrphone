@@ -147,6 +147,20 @@ const lookupMerchantXrphoneAccount = async (phone_number) => {
 };
 
 /**
+ * Lookup (Merchant) XRPhone Account *by Quickbooks Realm Id*
+ *
+ * @param {string} realm_id - The Quickbooks realm id of merchant XRPhone account holder.
+ * @returns {Promise} - Promise object representing merchant XRPhone account
+ */
+const lookupMerchantXrphoneAccountByQuickbooksRealmId = async (realm_id) => {
+  return await supabase
+    .from("account_merchant")
+    .select()
+    .single()
+    .eq("app_integration->>realm_id", realm_id);
+}
+
+/**
  * Delete (Regular) XRPhone Account
  *
  * @param {string} phone_number - The phone number of merchant XRPhone account holder.
@@ -179,6 +193,7 @@ module.exports = {
   lookupMerchantXrphoneAccountByXrpAddress,
   lookupRegularXrphoneAccount,
   lookupMerchantXrphoneAccount,
+  lookupMerchantXrphoneAccountByQuickbooksRealmId,
   deleteRegularXrphoneAccount,
   deleteMerchantXrphoneAccount,
 };

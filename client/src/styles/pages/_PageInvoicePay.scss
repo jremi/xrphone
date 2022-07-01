@@ -1,0 +1,33 @@
+#page-invoice-pay-container {
+    .container {
+        text-align: center;
+        justify-content: center;
+        display: flex;
+
+        .invoice-number {
+            font-weight: bold;
+            color: white;
+            font-size: 38px;
+        }
+
+        .outstanding-balance {
+            color: grey;
+            font-size: 28px;
+
+            .amount {
+                color: #5771fc;
+                font-weight: bold;
+            }
+        }
+
+        .pay-with-xumm-btn {
+            cursor: pointer;
+        }
+
+        .logo {
+            width: 144px;
+            position: fixed;
+            bottom: 24px;
+        }
+    }
+}

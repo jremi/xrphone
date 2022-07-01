@@ -3,6 +3,7 @@ import PageSignUp from "../pages/PageSignUp.vue";
 import PageSignUpSetup from "../pages/PageSignUpSetup.vue";
 import PageSignIn from "../pages/PageSignIn.vue";
 import PageDashboard from "../pages/PageDashboard.vue";
+import PageInvoicePay from "../pages/PageInvoicePay.vue";
 
 import store from "../store";
 
@@ -51,5 +52,10 @@ export default [
     beforeEnter(to, from, next) {
       requiresAuth(next);
     },
+  },
+  {
+    name: "invoice-pay",
+    path: "/invoice-pay/:base64Resource",
+    component: PageInvoicePay,
   },
 ];

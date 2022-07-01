@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <NavBar />
+    <NavBar v-if="!isHidden" />
     <div class="main-layout">
       <router-view></router-view>
     </div>
-    <Footer v-if="$route.name === 'landing'" />
+    <Footer v-if="!isHidden" />
   </div>
 </template>
 
@@ -17,6 +17,12 @@ export default {
   components: {
     NavBar,
     Footer
+  },
+  computed: {
+    isHidden() {
+      const pages = ['invoice-pay'];
+      return pages.includes(this.$route.name);
+    }
   },
 };
 </script>

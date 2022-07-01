@@ -113,14 +113,11 @@ routes.post("/create/regular", async (req, res) => {
 
 /*
   // =============================================================
-  // Currently for v.0.0.1 the /routes/freshbooks oAuth endpoint
-  // app integration for merchants also creates the XRPPhone 
-  // merchant account when user grants the freshbooks credentials.
+  // Currently /routes/freshbooks/oauth and /routes/quickbooks/oauth 
+  // endpoints app integration for merchants also creates the XRPPhone 
+  // merchant account when user grants the freshbooks/quickbooks 
+  // oauth account credentials.
   // =============================================================
-
-  routes.post("/create/merchant", async (req, res) => {
-    res.sendStatus(200);
-  });
 */
 
 routes.get("/paid-invoices", authRequired, async (req, res) => {

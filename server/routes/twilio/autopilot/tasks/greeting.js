@@ -2,9 +2,14 @@ const { lookupRegularXrphoneAccount } = require("../../../../db/supabase");
 
 module.exports = async (req, res) => {
   const memory = JSON.parse(req.body["Memory"]);
-  const { From } = memory.twilio.voice;
+  // Should be const after demo TODO: change from let to const
+  let { From } = memory.twilio.voice;
+  console.log('From', From);
 
+  // Temporary hack for demo TODO: REMOVE WHEN DONE
+  if (From === '+16196770504') From = '+16197381017';
   const { data: regularAccountHolder } = await lookupRegularXrphoneAccount(From);
+  console.log('regularAccountHolder', regularAccountHolder);
 
   // console.log("\n#######################################");
   // console.log("📱 XRPhone Regular Account: ", regularAccountHolder);
