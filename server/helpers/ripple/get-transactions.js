@@ -34,7 +34,9 @@ async function getTransactions(xrpAddress, xrplNetwork) {
         sourceAddress: txn.specification.source.address,
         destinationAddress: txn.specification.destination.address,
         timestamp: txn.outcome.timestamp,
-        deliveredAmount: `${txn.outcome.deliveredAmount.value} ${txn.outcome.deliveredAmount.currency}`,
+        deliveredAmount: `${txn.outcome.deliveredAmount.value} ${txn.outcome.deliveredAmount.currency.length <= 3
+          ? txn.outcome.deliveredAmount.currency
+          : Buffer.from(txn.outcome.deliveredAmount.currency, 'hex').toString('utf8')}`,
         memo: txn.specification.memos[0].data,
         xrplExplorer:
           xrplNetwork === "MAINNET"

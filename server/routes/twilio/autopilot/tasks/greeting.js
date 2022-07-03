@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
   console.log('From', From);
 
   // Temporary hack for demo TODO: REMOVE WHEN DONE
-  if (From === '+16196770504') From = '+16197381017';
+  // if (From === '+16196770504') From = '+16197381017';
   const { data: regularAccountHolder } = await lookupRegularXrphoneAccount(From);
   console.log('regularAccountHolder', regularAccountHolder);
 
@@ -40,8 +40,7 @@ module.exports = async (req, res) => {
       },
       {
         say: `Hello! Welcome to XRP Phone! 
-        The fast and easy way to pay invoices 
-        using Ripple XRP!`,
+        The fast and easy way to pay invoices!`,
       },
       {
         collect: {
@@ -76,6 +75,35 @@ module.exports = async (req, res) => {
                   say: "Ok, got it!",
                 },
               },
+            },
+            {
+              question: "To pay with XRP press 1 followed by the pound sign. To pay with XPHO press 2 followed by the pound sign.",
+              name: "xrphone_token_currency",
+              type: "Twilio.NUMBER",
+              voice_digits: {
+                finish_on_key: '#'
+              },
+              barge: false,
+              validate: {
+                webhook: {
+                  url: `${process.env.SERVER_URL}/twilio/autopilot/tasks/action/collect/question/webhook`,
+                  method: "POST",
+                },
+                on_failure: {
+                  messages: [
+                    {
+                      say: "The token currency is required for make payment on your invoice.",
+                    },
+                    {
+                      say: "Lets try again.",
+                    },
+                  ],
+                  repeat_question: true,
+                },
+                on_success: {
+                  say: "Great!",
+                },
+              }
             },
             {
               question:

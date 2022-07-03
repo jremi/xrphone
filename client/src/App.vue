@@ -4,19 +4,19 @@
     <div class="main-layout">
       <router-view></router-view>
     </div>
-    <Footer v-if="!isHidden" />
+    <!-- <Footer v-if="!isHidden" /> -->
   </div>
 </template>
 
 <script>
 import NavBar from "@/components/layout/NavBar";
-import Footer from "@/components/layout/Footer";
+// import Footer from "@/components/layout/Footer";
 
 export default {
   name: "App",
   components: {
     NavBar,
-    Footer
+    // Footer
   },
   computed: {
     isHidden() {

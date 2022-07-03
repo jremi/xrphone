@@ -6,10 +6,9 @@
           <router-link :to="{name: isUserSignedIn ? 'dashboard' : 'landing'}">
             <div class="logo-wrapper">
               <img
-                src="@/assets/images/logos/xrp-logo-textmark-white.png"
+                src="https://www.xrphone.app/images/xrphone-logo-white.png"
                 alt="Logo"
               />
-              <div class="logo-letters">hone</div>
             </div>
           </router-link>
         </b-navbar-item>
