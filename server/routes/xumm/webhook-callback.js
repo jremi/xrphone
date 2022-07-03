@@ -3,8 +3,10 @@ const {
   updateRegularXrphoneAccount,
   lookupMerchantXrphoneAccount,
 } = require("../../db/supabase");
+
 const Freshbooks = require("../../helpers/freshbooks/freshbooks-wrapper");
 const Quickbooks = require("../../helpers/quickbooks/quickbooks-wrapper");
+const Xero = require("../../helpers/xero/xero-wrapper");
 
 const Sdk = new XummSdk();
 
@@ -84,6 +86,29 @@ module.exports = async (req, res) => {
           customMeta.invoiceId,
           customMeta.usdAmount,
           customMeta.xrpAmount,
+          xrpTransactionId
+        );
+      }
+      else if (customMeta.merchantAppIntegration === 'xero') {
+        const {
+          data: {
+            phone_number,
+            app_integration: merchantAccountAppIntegration,
+          },
+        } = await lookupMerchantXrphoneAccount(customMeta.merchantPhoneNumber);
+        const xero = new Xero({
+          phone_number,
+          access_token: merchantAccountAppIntegration.access_token,
+          refresh_token: merchantAccountAppIntegration.refresh_token,
+          tenant_id: merchantAccountAppIntegration.tenant_id,
+        });
+        await xero.applyPaymentToInvoice(
+          customMeta.accountId,
+          customMeta.invoiceId,
+          customMeta.usdAmount,
+          customMeta.currency,
+          customMeta.xrpAmount,
+          customMeta.xphoAmount,
           xrpTransactionId
         );
       }

@@ -11,6 +11,7 @@ const history = require("connect-history-api-fallback");
 const userRoutes = require("./routes/xrphone/user");
 const freshbooksOauth = require("./routes/freshbooks/oauth");
 const quickbooksOauth = require("./routes/quickbooks/oauth");
+const xeroOauth = require("./routes/xero/oauth");
 const xummWebhookCallback = require("./routes/xumm/webhook-callback");
 const shareLinkInvoiceLookup = require("./routes/xrphone/share-link/invoiceLookup");
 const shareLinkInvoicePay = require("./routes/xrphone/share-link/invoicePay");
@@ -85,6 +86,7 @@ app.post("/share-link/invoice-pay", shareLinkInvoicePay);
 // XRPhone App Integrations /  Create Merchant User
 app.get("/plugins/freshbooks/oauth", freshbooksOauth);
 app.get("/plugins/quickbooks/oauth", quickbooksOauth);
+app.get("/plugins/xero/oauth", xeroOauth);
 
 // ********** Server Listener **************
 

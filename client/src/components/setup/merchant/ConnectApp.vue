@@ -30,6 +30,7 @@
 <script>
 import freshbooksLogo from "@/assets/images/logos/other/freshbooks-logo.png";
 import quickbooksLogo from "@/assets/images/logos/other/quickbooks-logo.png";
+import xeroLogo from "@/assets/images/logos/other/xero-logo.png";
 
 export default {
   name: "Connectapp",
@@ -77,6 +78,13 @@ export default {
           image: quickbooksLogo,
           cssClass: "quickbooks-logo",
           authUrl: process.env.VUE_APP_INTEGRATION_QUICKBOOKS_OAUTH_URL,
+        },
+        {
+          id: "xero",
+          name: "Xero",
+          image: xeroLogo,
+          cssClass: 'xero-logo',
+          authUrl: process.env.VUE_APP_INTEGRATION_XERO_OAUTH_URL,
         },
       ],
     };

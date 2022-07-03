@@ -3,13 +3,7 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>XRPhone</strong> by
-          <a
-            href="https://www.linkedin.com/in/jeremy-bursky-a72a98208"
-            target="_blank"
-            >Jeremy Bursky</a
-          >
-          © 2021
+          Copyright© XRPhone {{ currentYear }}. All rights reserved
         </p>
       </div>
     </footer>
@@ -19,5 +13,10 @@
 <script>
 export default {
   name: "Footer",
+  computed: {
+    currentYear() {
+      return (new Date()).getFullYear()
+    }
+  },
 };
 </script>

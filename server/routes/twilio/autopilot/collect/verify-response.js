@@ -1,8 +1,10 @@
 "use strict";
 
 const { lookupMerchantXrphoneAccount } = require("../../../../db/supabase");
+
 const Freshbooks = require("../../../../helpers/freshbooks/freshbooks-wrapper");
 const Quickbooks = require("../../../../helpers/quickbooks/quickbooks-wrapper");
+const Xero = require("../../../../helpers/xero/xero-wrapper");
 
 module.exports = async (req, res) => {
   const memory = JSON.parse(req.body["Memory"]);
@@ -13,6 +15,8 @@ module.exports = async (req, res) => {
   let isValid = false;
 
   console.log('ValidateFieldAnswer', ValidateFieldAnswer);
+  console.log('CollectName', CollectName);
+  console.log('ValidateFieldName', ValidateFieldName);
 
   if (CollectName === "collect_invoice_details") {
     if (ValidateFieldName === "xrphone_merchant_phone_number") {
@@ -29,10 +33,23 @@ module.exports = async (req, res) => {
       }
     }
 
+    if (ValidateFieldName === "xrphone_token_currency") {
+      const tokenCurrencyOption = ValidateFieldAnswer;
+      const { merchantAccountHolder } = global.transactionCache.get(CallSid);
+      if (tokenCurrencyOption == "1" || tokenCurrencyOption == "2") {
+        const tokenCurrency = tokenCurrencyOption == '1' ? 'XRP' : 'XPHO';
+        global.transactionCache.set(CallSid, {
+          merchantAccountHolder,
+          tokenCurrency
+        });
+        isValid = true;
+      }
+    }
+
     if (ValidateFieldName === "xrphone_merchant_invoice_number") {
       const { phone_number: customerPhoneNumber } = memory.regularAccountHolder;
       const merchantInvoiceNumber = ValidateFieldAnswer;
-      const { merchantAccountHolder } = global.transactionCache.get(CallSid);
+      const { merchantAccountHolder, tokenCurrency } = global.transactionCache.get(CallSid);
       const merchantAccountAppIntegration = merchantAccountHolder.app_integration;
 
       if (merchantAccountAppIntegration.id === "freshbooks") {
@@ -49,6 +66,7 @@ module.exports = async (req, res) => {
             if (freshbooks.invoice.payment_status !== "paid") {
               global.transactionCache.set(CallSid, {
                 merchantAccountHolder,
+                tokenCurrency,
                 invoice: freshbooks.invoice,
               });
               return true;
@@ -69,7 +87,29 @@ module.exports = async (req, res) => {
           if (quickbooks.invoice) {
             global.transactionCache.set(CallSid, {
               merchantAccountHolder,
+              tokenCurrency,
               invoice: quickbooks.invoice,
+            });
+            return true;
+          }
+        } catch (err) {
+          console.log("Error with invoice lookup:", err);
+        }
+      } else if (merchantAccountAppIntegration.id === 'xero') {
+        const xero = new Xero({
+          phone_number: merchantAccountHolder.phone_number,
+          access_token: merchantAccountAppIntegration.access_token,
+          refresh_token: merchantAccountAppIntegration.refresh_token,
+          tenant_id: merchantAccountAppIntegration.tenant_id
+        });
+        try {
+          await xero.getInvoiceByInvoiceNumber(merchantInvoiceNumber);
+          console.log('xero.invoice', xero.invoice);
+          if (xero.invoice) {
+            global.transactionCache.set(CallSid, {
+              merchantAccountHolder,
+              tokenCurrency,
+              invoice: xero.invoice,
             });
             return true;
           }
@@ -81,12 +121,13 @@ module.exports = async (req, res) => {
   }
 
   if (CollectName === "collect_invoice_amount") {
+    const { tokenCurrency } = global.transactionCache.get(CallSid);
     const invoice = memory.invoice;
     if (ValidateFieldName === "amount") {
       const usdAmountToPay = parseFloat(
         ValidateFieldAnswer.replace(/\*/g, ".")
       );
-      global.transactionCache.set(CallSid, { usdAmountToPay });
+      global.transactionCache.set(CallSid, { usdAmountToPay, tokenCurrency });
       const invoiceOutstandingAmount = parseFloat(invoice.outstanding.amount);
       if (usdAmountToPay <= invoiceOutstandingAmount) {
         return true;

@@ -178,6 +178,24 @@
                       >
                     </footer>
                   </div>
+                  <div
+                    v-if="userSettings.appIntegrationId === 'xero'"
+                    class="card"
+                  >
+                    <div class="is-flex is-justify-content-center">
+                      <img
+                        :src="appIntegrationLogo.xero"
+                        class="app-integration-logo xero-logo"
+                      />
+                    </div>
+                    <footer class="card-footer">
+                      <a
+                        @click="disconnectAppIntegration"
+                        class="card-footer-item has-text-weight-bold"
+                        >Disconnect</a
+                      >
+                    </footer>
+                  </div>
                 </div>
               </div>
               <div v-else>
@@ -231,6 +249,7 @@ import XrplNetworkSelect from "@/components/common/XrplNetworkSelect";
 import ConnectApp from "@/components/setup/merchant/ConnectApp";
 import freshbooksLogo from "@/assets/images/logos/other/freshbooks-logo.png";
 import quickbooksLogo from "@/assets/images/logos/other/quickbooks-logo.png";
+import xeroLogo from "@/assets/images/logos/other/xero-logo.png";
 
 export default {
   name: "PageDashboard",
@@ -251,6 +270,7 @@ export default {
       appIntegrationLogo: {
         freshbooks: freshbooksLogo,
         quickbooks: quickbooksLogo,
+        xero: xeroLogo
       },
     };
   },
@@ -348,6 +368,7 @@ export default {
         confirmText: "Disconnect App",
         type: "is-danger",
         hasIcon: true,
+        scroll: 'keep',
         onConfirm: () => {
           this.userSettings.appIntegrationId = null;
           this.saveSettings();
