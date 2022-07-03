@@ -1,3 +1,4 @@
+const xphoOracle = require("../../../helpers/ripple/xpho-oracle");
 const xrplOracle = require("../../../helpers/ripple/xrpl-oracle");
 const createSendPaymentPayload = require("../../../helpers/xumm/send-payment");
 
@@ -7,9 +8,14 @@ async function invoicePay(req, res) {
     const xrp_account = req.body.merchant.xrp_account;
     const destination_tag = req.body.merchant.destination_tag;
     const usdAmountToPay = req.body.usdAmountToPay;
+    const currency = req.body.currency;
     const currentXrpUsdSpotPrice = await xrplOracle();
+    const currentXphoXrpSpotPrice = await xphoOracle();
     const xrpAmount = (
         parseFloat(usdAmountToPay) / currentXrpUsdSpotPrice
+    ).toFixed(2);
+    const xphoAmount = (
+        parseFloat(usdAmountToPay) / (currentXrpUsdSpotPrice * currentXphoXrpSpotPrice)
     ).toFixed(2);
     const metadata = {
         type: "INVOICE_PAYMENT",
@@ -20,7 +26,9 @@ async function invoicePay(req, res) {
         accountId: req.body.invoice.accountid,
         invoiceId: req.body.invoice.id,
         usdAmount: usdAmountToPay,
+        currency,
         xrpAmount,
+        xphoAmount
     };
     const result = await createSendPaymentPayload(
         null,

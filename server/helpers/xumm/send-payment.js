@@ -10,6 +10,8 @@ module.exports = function (
   xrpAmount,
   metadata = {
     usdAmount: null,
+    currency: null,
+    xphoAmount: null,
     invoiceId: null,
     invoiceNumber: null,
     merchantXrphone: null,
@@ -23,10 +25,16 @@ module.exports = function (
           txjson: {
             TransactionType: "Payment",
             Destination: merchantXrpAccount,
-            DestinationTag: merchantDestinationTag
-              ? parseInt(merchantDestinationTag)
-              : null,
-            Amount: xrpToDrops(xrpAmount),
+            Amount: (() => {
+              if (metadata.currency && metadata.currency.toLowerCase() === 'xpho') {
+                return {
+                  currency: '5850484F00000000000000000000000000000000',
+                  value: metadata.xphoAmount,
+                  issuer: 'rsVZrh3cvisTSHFcEZqPK1ioRzxbeG4PBk'
+                }
+              }
+              return xrpToDrops(xrpAmount)
+            })(),
             Memos: [
               {
                 Memo: {
@@ -43,7 +51,10 @@ module.exports = function (
             blob: JSON.stringify(metadata),
           },
         };
-        const payment = await Sdk.payload.create(transaction);
+        if (merchantDestinationTag) {
+          transaction[DestinationTag] = parseInt(merchantDestinationTag)
+        }
+        const payment = await Sdk.payload.create(transaction).catch(err => console.log('err', err));
         resolve(payment);
         /*
         await Sdk.payload.subscribe(payment, async ({ data }) => {

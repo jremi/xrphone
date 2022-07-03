@@ -104,7 +104,9 @@ class Freshbooks {
     accountId,
     invoiceId,
     usdAmount,
+    currency,
     xrpAmount,
+    xphoAmount,
     xrpTransactionId
   ) {
     const { data } = await freshbooksApi.post(
@@ -117,7 +119,12 @@ class Freshbooks {
           },
           date: moment().format("YYYY-MM-DD"), // "2021-09-19",
           type: "Cash",
-          note: `Paid (${xrpAmount} XRP) via XRPhone`, // (XRPL Transaction #${xrpTransactionId})`,
+          note: (() => {
+            if (currency && currency.toLowerCase() === 'xpho') {
+              return `Paid (${xphoAmount}) XPHO via XRPhone`;
+            }
+            return `Paid (${xrpAmount} XRP) via XRPhone`; // (XRPL Transaction #${xrpTransactionId})`,
+          })()
         },
       }
     );

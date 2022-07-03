@@ -20,6 +20,22 @@
             }
         }
 
+        .amount-to-pay-container {
+            input {
+                font-weight: 900;
+            }
+        }
+
+        .currency-type-container {
+            .pay-with {
+                color: grey;
+                font-size: 28px;
+            }
+            select {
+                font-weight: 900;
+            }
+        }
+
         .pay-with-xumm-btn {
             cursor: pointer;
         }
@@ -27,7 +43,7 @@
         .logo {
             width: 144px;
             position: fixed;
-            bottom: 24px;
+            bottom: 48px;
         }
     }
 }

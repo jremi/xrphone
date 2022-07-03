@@ -3,9 +3,8 @@ const { default: createAuthRefreshInterceptor } = require("axios-auth-refresh");
 const { updateMerchantXrphoneAccount } = require("../../db/supabase");
 const qs = require("qs");
 
-const quickbooksBaseURL = `https://${
-  process.env.NODE_ENV === "development" ? "sandbox-" : ""
-}quickbooks.api.intuit.com`;
+const quickbooksBaseURL = `https://${process.env.NODE_ENV === "development" ? "sandbox-" : ""
+  }quickbooks.api.intuit.com`;
 
 const oAuthURL = "https://oauth.platform.intuit.com";
 
@@ -145,14 +144,50 @@ class Quickbooks {
     return null;
   }
 
+  async getXphoPaymentMethodRefId() {
+    const { data: paymentMethods } = await quickbooksApi.get(
+      `/v3/company/${this.realm_id}/query`,
+      {
+        params: {
+          query: `SELECT Id, Name FROM PaymentMethod`,
+        },
+      }
+    );
+    if (
+      paymentMethods.QueryResponse &&
+      paymentMethods.QueryResponse.PaymentMethod
+    ) {
+      const xphoPaymentMethod = paymentMethods.QueryResponse.PaymentMethod.find(
+        (paymentMethod) => paymentMethod.Name === "XPHO"
+      );
+      if (xphoPaymentMethod) {
+        return xphoPaymentMethod.Id;
+      }
+      const { data: paymentMethod } = await quickbooksApi.post(
+        `/v3/company/${this.realm_id}/paymentmethod`,
+        {
+          Name: "XPHO",
+        }
+      );
+      if (paymentMethod && paymentMethod.PaymentMethod) {
+        return paymentMethod.PaymentMethod.Id;
+      }
+    }
+    return null;
+  }
+
   async applyPaymentToInvoice(
     accountId,
     invoiceId,
     usdAmount,
+    currency,
     xrpAmount,
+    xphoAmount,
     xrpTransactionId
   ) {
-    const paymentMethodRefId = await this.getXrpPaymentMethodRefId();
+    const paymentMethodRefId = currency && currency.toLowerCase() === 'xpho' ?
+      await this.getXphoPaymentMethodRefId() :
+      await this.getXrpPaymentMethodRefId();
     const { data } = await quickbooksApi
       .post(`/v3/company/${this.realm_id}/payment`, {
         TotalAmt: usdAmount, // e.g 1.00
@@ -162,7 +197,12 @@ class Quickbooks {
         PaymentMethodRef: {
           value: paymentMethodRefId,
         },
-        PrivateNote: `Paid (${xrpAmount} XRP) via XRPhone - XRPL Transaction: ${xrpTransactionId}`,
+        PrivateNote: (() => {
+          if (currency && currency.toLowerCase() === 'xpho') {
+            return `Paid (${xphoAmount}) XPHO via XRPhone - XRPL Transaction: ${xrpTransactionId}`;
+          }
+          return `Paid (${xrpAmount} XRP) via XRPhone - XRPL Transaction: ${xrpTransactionId}`
+        })(),
         ProcessPayment: false,
         Line: [
           {
