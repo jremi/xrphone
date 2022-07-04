@@ -12,7 +12,7 @@ async function generateNgrokUrl() {
   console.log(`\nTwilio urls updated!`);
 
   await updateDotenv({
-    CLIENT_APP_URL: url,
+    SERVER_URL: url,
   });
 }
 

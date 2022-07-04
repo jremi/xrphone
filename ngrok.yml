@@ -1,0 +1,19 @@
+authtoken: a1xFgre6AxWVWMeGLxZh_7hmXKa34aQtJucZhF63YF
+tunnels:
+  # client-xapp:
+  #   proto: http
+  #   addr: 8080
+  #   host_header: rewrite
+  #   inspect: true
+  #   subdomain: xrphone-client-xapp-tunnel
+  client:
+    proto: http
+    addr: 8081
+    host_header: rewrite
+    inspect: true
+    subdomain: xrphone-client-tunnel
+  server:
+    proto: http
+    addr: 3000
+    inspect: true
+    subdomain: xrphone-server-tunnel

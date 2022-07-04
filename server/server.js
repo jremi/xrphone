@@ -79,8 +79,8 @@ app.listen(PORT, () => {
   );
   console.log(
     `  - Network: ${chalk.cyan(
-      `${process.env.CLIENT_APP_URL}:${chalk.bold(
-        process.env.CLIENT_APP_URL.includes("https") ? "443" : "80"
+      `${process.env.SERVER_URL}:${chalk.bold(
+        process.env.SERVER_URL.includes("https") ? "443" : "80"
       )}/`
     )}\n`
   );

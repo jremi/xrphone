@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
               barge: false,
               validate: {
                 webhook: {
-                  url: `${process.env.CLIENT_APP_URL}/twilio/autopilot/tasks/action/collect/question/webhook`,
+                  url: `${process.env.SERVER_URL}/twilio/autopilot/tasks/action/collect/question/webhook`,
                   method: "POST",
                 },
                 on_failure: {
@@ -83,7 +83,7 @@ module.exports = async (req, res) => {
               barge: false,
               validate: {
                 webhook: {
-                  url: `${process.env.CLIENT_APP_URL}/twilio/autopilot/tasks/action/collect/question/webhook`,
+                  url: `${process.env.SERVER_URL}/twilio/autopilot/tasks/action/collect/question/webhook`,
                   method: "POST",
                 },
                 on_failure: {
