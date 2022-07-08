@@ -7,8 +7,9 @@ const chalk = require("chalk");
 const NodeCache = require("node-cache");
 const express = require("express");
 const cors = require("cors");
-const history = require("connect-history-api-fallback");
+// const history = require("connect-history-api-fallback");
 const userRoutes = require("./routes/xrphone/user");
+const devPortalRoutes = require('./routes/xrphone/dev-portal');
 const freshbooksOauth = require("./routes/freshbooks/oauth");
 const quickbooksOauth = require("./routes/quickbooks/oauth");
 const xeroOauth = require("./routes/xero/oauth");
@@ -29,6 +30,15 @@ const app = express();
 
 global.transactionCache = new NodeCache({ stdTTL: 600, checkperiod: 120 });
 
+const handleError = (middleware, req, res, next) => {
+  middleware(req, res, (err) => {
+    if (err) {
+      return res.sendStatus(400); // Bad request
+    }
+    next();
+  });
+};
+
 app.use(cors());
 // app.use(
 //   history({
@@ -36,6 +46,9 @@ app.use(cors());
 //     ignoreRequestUrls: ["/plugins"],
 //   })
 // );
+app.use((req, res, next) => {
+  handleError(express.json(), req, res, next);
+});
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -87,6 +100,8 @@ app.post("/share-link/invoice-pay", shareLinkInvoicePay);
 app.get("/plugins/freshbooks/oauth", freshbooksOauth);
 app.get("/plugins/quickbooks/oauth", quickbooksOauth);
 app.get("/plugins/xero/oauth", xeroOauth);
+
+app.use("/api/v1/dev-portal", devPortalRoutes)
 
 // ********** Server Listener **************
 
