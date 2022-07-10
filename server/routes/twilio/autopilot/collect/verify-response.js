@@ -1,10 +1,11 @@
 "use strict";
 
-const { lookupMerchantXrphoneAccount } = require("../../../../db/supabase");
+const { lookupMerchantXrphoneAccount, lookupDeveloperAppById } = require("../../../../db/supabase");
 
 const Freshbooks = require("../../../../helpers/freshbooks/freshbooks-wrapper");
 const Quickbooks = require("../../../../helpers/quickbooks/quickbooks-wrapper");
 const Xero = require("../../../../helpers/xero/xero-wrapper");
+const CustomApp = require("../../../../helpers/xrphone/custom-app-wrapper");
 
 module.exports = async (req, res) => {
   const memory = JSON.parse(req.body["Memory"]);
@@ -110,6 +111,29 @@ module.exports = async (req, res) => {
               merchantAccountHolder,
               tokenCurrency,
               invoice: xero.invoice,
+            });
+            return true;
+          }
+        } catch (err) {
+          console.log("Error with invoice lookup:", err);
+        }
+      } 
+      // Custom app integration via XRPhone developer portal
+      else if (typeof merchantAccountAppIntegration.id === "number") {
+        const { data: app } = await lookupDeveloperAppById(merchantAccountAppIntegration.id);
+        const customApp = new CustomApp(app, {
+          phone_number: merchantAccountHolder.phone_number,
+          access_token: merchantAccountAppIntegration.access_token,
+          refresh_token: merchantAccountAppIntegration.refresh_token,
+        });
+        try {
+          await customApp.getInvoiceByInvoiceNumber(merchantInvoiceNumber);
+          console.log('customApp.invoice', customApp.invoice);
+          if (customApp.invoice) {
+            global.transactionCache.set(CallSid, {
+              merchantAccountHolder,
+              tokenCurrency,
+              invoice: customApp.invoice,
             });
             return true;
           }

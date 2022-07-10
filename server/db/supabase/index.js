@@ -184,6 +184,45 @@ const deleteMerchantXrphoneAccount = async (phone_number) =>
     .delete()
     .eq("phone_number", phone_number);
 
+
+/**
+ * Lookup custom external sandboxed XRPhone developer app integrations by merchant number
+ *
+ * @param {string} appDebugMerchantNumber - (Required) merchant phone number associated with developer sandbox application for testing/debugging
+ * @returns {Promise} - Promise object representing custom external XRPhone developer sandboxed app integrations.
+ */
+const lookupDeveloperAppsSandboxedByMerchantNumber = async (appDebugMerchantNumber) =>
+  await supabase
+    .from("devportal_application")
+    .select()
+    .match({
+      appIsSandboxed: true,
+      appDebugMerchantNumber
+    });
+
+/**
+ * Lookup custom external listed XRPhone developer app integrations
+ *
+ * @returns {Promise} - Promise object representing custom external XRPhone developer listed app integrations.
+ */
+const lookupDeveloperAppsListed = async () =>
+  await supabase
+    .from("devportal_application")
+    .select()
+    .eq("appIsListed", true);
+
+/**
+ * Lookup custom external XRPhone developer app integrations by app id
+ *
+ * @returns {Promise} - Promise object representing custom external XRPhone developer listed app integration.
+ */
+const lookupDeveloperAppById = async (id) =>
+  await supabase
+    .from("devportal_application")
+    .select()
+    .single()
+    .eq("id", id);
+
 module.exports = {
   createRegularXrphoneAccount,
   createMerchantXrphoneAccount,
@@ -196,4 +235,7 @@ module.exports = {
   lookupMerchantXrphoneAccountByQuickbooksRealmId,
   deleteRegularXrphoneAccount,
   deleteMerchantXrphoneAccount,
+  lookupDeveloperAppsSandboxedByMerchantNumber,
+  lookupDeveloperAppsListed,
+  lookupDeveloperAppById
 };

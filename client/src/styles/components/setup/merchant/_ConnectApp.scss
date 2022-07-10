@@ -8,11 +8,30 @@
     align-items: center;
     height: 125px;
     cursor: pointer;
+    .sandbox-status {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      background-color: #ffe08a;
+      padding: 0.65rem;
+      border-top-right-radius: 6px;
+      border-bottom-left-radius: 26px;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
     .card-image {
       width: 225px;
+      .app-name {
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
     }
   }
   .card.xero-logo img {
     width: 105px;
+  }
+  .card.app-is-listed img,
+  .card.app-is-sandboxed img {
+    height: 60px;
   }
 }

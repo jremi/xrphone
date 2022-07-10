@@ -1,65 +1,34 @@
 <template>
   <div id="page-dashboard-container">
     <div class="container">
-      <b-tabs
-        v-model="activeTab"
-        size="is-medium"
-        position="is-left"
-        class="block"
-        type="is-boxed"
-        @input="onTabChange"
-      >
+      <b-tabs v-model="activeTab" size="is-medium" position="is-left" class="block" type="is-boxed"
+        @input="onTabChange">
         <b-tab-item label="Invoices" icon="receipt">
           <div class="card">
             <b-table striped :data="paidInvoices">
-              <b-table-column
-                field="timestamp"
-                label="Date/Time"
-                v-slot="props"
-              >
+              <b-table-column field="timestamp" label="Date/Time" v-slot="props">
                 {{ props.row.timestamp | moment("MM/DD/YYYY - hh:mm A") }}
               </b-table-column>
-              <b-table-column
-                :field="
-                  isMerchantAccount ? 'destinationAddress' : 'sourceAddress'
-                "
-                :label="isMerchantAccount ? 'Customer' : 'Merchant'"
-                v-slot="props"
-              >
+              <b-table-column :field="
+                isMerchantAccount ? 'destinationAddress' : 'sourceAddress'
+              " :label="isMerchantAccount ? 'Customer' : 'Merchant'" v-slot="props">
                 {{
-                  isMerchantAccount
-                    ? props.row.sourceAddress
-                    : props.row.destinationAddress
+                    isMerchantAccount
+                      ? props.row.sourceAddress
+                      : props.row.destinationAddress
                 }}
               </b-table-column>
               <b-table-column field="memo" label="Memo" v-slot="props">
                 {{ props.row.memo }}
               </b-table-column>
-              <b-table-column
-                field="deliveredAmount"
-                label="Amount"
-                v-slot="props"
-              >
-                <b-tag
-                  :type="isMerchantAccount ? 'is-green' : 'is-danger'"
-                  class="has-text-weight-bold"
-                  >{{ isMerchantAccount ? "+" : "-"
-                  }}{{ props.row.deliveredAmount }}</b-tag
-                >
+              <b-table-column field="deliveredAmount" label="Amount" v-slot="props">
+                <b-tag :type="isMerchantAccount ? 'is-green' : 'is-danger'" class="has-text-weight-bold">{{
+                    isMerchantAccount ? "+" : "-"
+                }}{{ props.row.deliveredAmount }}</b-tag>
               </b-table-column>
-              <b-table-column
-                field="xrplExplorer"
-                label="XRPL"
-                v-slot="props"
-                width="40"
-              >
-                <b-button
-                  type="is-dark"
-                  icon-left="external-link-alt"
-                  tag="a"
-                  :href="props.row.xrplExplorer"
-                  target="_blank"
-                />
+              <b-table-column field="xrplExplorer" label="XRPL" v-slot="props" width="40">
+                <b-button type="is-dark" icon-left="external-link-alt" tag="a" :href="props.row.xrplExplorer"
+                  target="_blank" />
               </b-table-column>
             </b-table>
           </div>
@@ -68,65 +37,40 @@
           <div class="card p-4">
             <div class="columns">
               <div class="column">
-                <b-field
-                  :label="
-                    isMerchantAccount
-                      ? 'XRPhone Merchant Number'
-                      : 'XRPhone Number'
-                  "
-                >
-                  <b-tag
-                    type="is-dark"
-                    class="has-text-weight-bold"
-                    size="is-medium"
-                  >
+                <b-field :label="
+                  isMerchantAccount
+                    ? 'XRPhone Merchant Number'
+                    : 'XRPhone Number'
+                ">
+                  <b-tag type="is-dark" class="has-text-weight-bold" size="is-medium">
                     {{ userSettings.phoneNumber }}
                   </b-tag>
                 </b-field>
               </div>
               <div class="column">
                 <b-field label="Toll-Free Payments Number">
-                  <b-tag
-                    type="is-primary"
-                    class="has-text-weight-bold"
-                    size="is-medium"
-                  >
-                    +18447390111</b-tag
-                  >
+                  <b-tag type="is-primary" class="has-text-weight-bold" size="is-medium">
+                    +18447390111</b-tag>
                 </b-field>
               </div>
             </div>
 
             <b-field label="XRP Account">
-              <b-input
-                v-if="isMerchantAccount"
-                v-model="userSettings.xrpAccount"
-                placeholder="XRP Address"
-              />
+              <b-input v-if="isMerchantAccount" v-model="userSettings.xrpAccount" placeholder="XRP Address" />
               <div v-else class="xrp-account">
                 {{ userSettings.xrpAccount }}
               </div>
             </b-field>
             <b-field>
-              <b-checkbox
-                class="has-text-weight-bold"
-                v-model="isCentralizedExchange"
-              >
+              <b-checkbox class="has-text-weight-bold" v-model="isCentralizedExchange">
                 Account on CEX (e.g: Uphold, KuCoin)
               </b-checkbox>
             </b-field>
             <b-field label="Destination Tag" v-if="isCentralizedExchange">
-              <b-input
-                v-model="userSettings.destinationTag"
-                placeholder="Destination Tag"
-                icon="tag"
-              />
+              <b-input v-model="userSettings.destinationTag" placeholder="Destination Tag" icon="tag" />
             </b-field>
             <b-field label="XRPL Network">
-              <XrplNetworkSelect
-                v-if="userSettings.xrplNetwork"
-                v-model="userSettings.xrplNetwork"
-              />
+              <XrplNetworkSelect v-if="userSettings.xrplNetwork" v-model="userSettings.xrplNetwork" />
             </b-field>
             <b-field v-if="!isMerchantAccount" label="XUMM Wallet">
               <div class="columns is-align-items-center">
@@ -137,65 +81,45 @@
                   </b-message>
                 </div>
                 <div class="column">
-                  <b-button @click="xummSignIn" expanded type="is-dark"
-                    >XUMM Sign In</b-button
-                  >
+                  <b-button @click="xummSignIn" expanded type="is-dark">XUMM Sign In</b-button>
                 </div>
               </div>
             </b-field>
             <b-field v-if="isMerchantAccount" label="App Integration">
               <div class="columns" v-if="userSettings.appIntegrationId">
                 <div class="column is-4">
-                  <div
-                    v-if="userSettings.appIntegrationId === 'freshbooks'"
-                    class="card"
-                  >
-                    <img
-                      :src="appIntegrationLogo.freshbooks"
-                      class="app-integration-logo"
-                    />
+                  <div v-if="userSettings.appIntegrationId === 'freshbooks'" class="card">
+                    <img :src="appIntegrationLogo.freshbooks" class="app-integration-logo" />
                     <footer class="card-footer">
-                      <a
-                        @click="disconnectAppIntegration"
-                        class="card-footer-item has-text-weight-bold"
-                        >Disconnect</a
-                      >
+                      <a @click="disconnectAppIntegration" class="card-footer-item has-text-weight-bold">Disconnect</a>
                     </footer>
                   </div>
-                  <div
-                    v-if="userSettings.appIntegrationId === 'quickbooks'"
-                    class="card"
-                  >
-                    <img
-                      :src="appIntegrationLogo.quickbooks"
-                      class="app-integration-logo"
-                    />
+                  <div v-if="userSettings.appIntegrationId === 'quickbooks'" class="card">
+                    <img :src="appIntegrationLogo.quickbooks" class="app-integration-logo" />
                     <footer class="card-footer">
-                      <a
-                        @click="disconnectAppIntegration"
-                        class="card-footer-item has-text-weight-bold"
-                        >Disconnect</a
-                      >
+                      <a @click="disconnectAppIntegration" class="card-footer-item has-text-weight-bold">Disconnect</a>
                     </footer>
                   </div>
-                  <div
-                    v-if="userSettings.appIntegrationId === 'xero'"
-                    class="card"
-                  >
+                  <div v-if="userSettings.appIntegrationId === 'xero'" class="card">
                     <div class="is-flex is-justify-content-center">
-                      <img
-                        :src="appIntegrationLogo.xero"
-                        class="app-integration-logo xero-logo"
-                      />
+                      <img :src="appIntegrationLogo.xero" class="app-integration-logo xero-logo" />
                     </div>
                     <footer class="card-footer">
-                      <a
-                        @click="disconnectAppIntegration"
-                        class="card-footer-item has-text-weight-bold"
-                        >Disconnect</a
-                      >
+                      <a @click="disconnectAppIntegration" class="card-footer-item has-text-weight-bold">Disconnect</a>
                     </footer>
                   </div>
+                  <div v-else-if="customAppIntegration" class="card">
+                    <div class="is-flex is-justify-content-center">
+                      <div class="has-text-centered">
+                        <img :src="customAppIntegration.appIconUrl" class="custom-app-integration-logo" />
+                        <div class="custom-app-name">{{ customAppIntegration.appName }}</div>
+                      </div>
+                    </div>
+                    <footer class="card-footer">
+                      <a @click="disconnectAppIntegration" class="card-footer-item has-text-weight-bold">Disconnect</a>
+                    </footer>
+                  </div>
+                  <b-skeleton v-else height="133.5" />
                 </div>
               </div>
               <div v-else>
@@ -204,40 +128,23 @@
                   XRPhone. Please connect app from below to begin using XRPhone
                   with your customers.
                 </b-message>
-                <ConnectApp
-                  @onConnectAppCompleted="onConnectAppCompleted"
-                  :phone-number="userAccount.phoneNumber"
-                  :xrpl-network="userAccount.xrplNetwork"
-                  :xrp-account="userAccount.xrpAccount"
-                  hide-title
-                />
+                <ConnectApp @onConnectAppCompleted="onConnectAppCompleted" :phone-number="userAccount.phoneNumber"
+                  :xrpl-network="userAccount.xrplNetwork" :xrp-account="userAccount.xrpAccount" hide-title />
               </div>
             </b-field>
             <b-field label="Danger Zone">
-              <b-button @click="deleteAccount" type="is-danger"
-                >Delete XRPhone Account</b-button
-              >
+              <b-button @click="deleteAccount" type="is-danger">Delete XRPhone Account</b-button>
             </b-field>
           </div>
           <div class="columns is-centered">
             <div class="column is-5 ">
-              <b-button
-                @click="saveSettings"
-                :loading="isLoading"
-                expanded
-                type="is-dark"
-                class="has-text-weight-bold mt-4"
-                >Save Settings</b-button
-              >
+              <b-button @click="saveSettings" :loading="isLoading" expanded type="is-dark"
+                class="has-text-weight-bold mt-4">Save Settings</b-button>
             </div>
           </div>
         </b-tab-item>
       </b-tabs>
-      <b-loading
-        v-model="isLoading"
-        :is-full-page="false"
-        :can-cancel="false"
-      ></b-loading>
+      <b-loading v-model="isLoading" :is-full-page="false" :can-cancel="false"></b-loading>
     </div>
   </div>
 </template>
@@ -272,6 +179,7 @@ export default {
         quickbooks: quickbooksLogo,
         xero: xeroLogo
       },
+      customAppIntegration: null
     };
   },
   async created() {
@@ -323,13 +231,14 @@ export default {
         if (cb) cb();
       });
     },
-    getSettings() {
-      this.axios.get("/user/settings").then(({ data: userSettings }) => {
-        this.userSettings = userSettings;
-        if (userSettings.destinationTag) {
-          this.isCentralizedExchange = true;
-        }
-      });
+    async getSettings() {
+      const { data: userSettings } = await this.axios.get("/user/settings");
+      if (userSettings.destinationTag) this.isCentralizedExchange = true;
+      if (userSettings.appIntegrationId && typeof this.userSettings.appIntegrationId === "number") {
+        const { data: customAppIntegration } = await this.axios.get(`/custom-apps/${this.userSettings.appIntegrationId}`);
+        this.customAppIntegration = customAppIntegration;
+      }
+      this.userSettings = userSettings;
     },
     xummSignIn() {
       const height = 825;

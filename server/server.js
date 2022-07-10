@@ -20,6 +20,8 @@ const { signIn, signInVerify, userTokenVerify } = require("./helpers/xumm");
 const { xAppOtt, xAppPush, xAppEvent } = require("./helpers/xumm/xapp");
 const paystringVerify = require("./routes/paystring/paystring-verify");
 const autopilot = require("./routes/twilio/autopilot");
+const customAppsOauth = require('./routes/xrphone/custom-apps/oauth');
+const { customAppsListed, customAppsSandboxed, customAppsLookupById } = require('./routes/xrphone/custom-apps');
 const verifyResponse = require("./routes/twilio/autopilot/collect/verify-response");
 const {
   sendVerificationCodeSms,
@@ -100,6 +102,12 @@ app.post("/share-link/invoice-pay", shareLinkInvoicePay);
 app.get("/plugins/freshbooks/oauth", freshbooksOauth);
 app.get("/plugins/quickbooks/oauth", quickbooksOauth);
 app.get("/plugins/xero/oauth", xeroOauth);
+
+// XRPhone Custom External Developer App Integrations
+app.get("/custom-apps/oauth", customAppsOauth);
+app.get("/custom-apps/listed", customAppsListed);
+app.get("/custom-apps/sandboxed", customAppsSandboxed);
+app.get("/custom-apps/:id", customAppsLookupById);
 
 app.use("/api/v1/dev-portal", devPortalRoutes)
 

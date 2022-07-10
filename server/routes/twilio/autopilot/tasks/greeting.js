@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
     res.json({
       actions: [
         {
-          say: `Hello! Welcome to XRP Phone!
+          say: `Hello! Welcome to XR Phone!
           We do not recognize this phone number your 
           calling from. To use XRP Phone you must 
           activate this phone number. Please visit 
@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
         },
       },
       {
-        say: `Hello! Welcome to XRP Phone! 
+        say: `Hello! Welcome to XR Phone! 
         The fast and easy way to pay invoices!`,
       },
       {
@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
           questions: [
             {
               question:
-                "Please say or enter the merchants XRP Phone number including the country and area code followed by the pound sign.",
+                "Please say or enter the merchants XR Phone number including the country and area code followed by the pound sign.",
               name: "xrphone_merchant_phone_number",
               type: "Twilio.NUMBER_SEQUENCE",
               voice_digits: {

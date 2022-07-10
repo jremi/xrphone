@@ -2,11 +2,13 @@ const { XummSdk } = require("xumm-sdk");
 const {
   updateRegularXrphoneAccount,
   lookupMerchantXrphoneAccount,
+  lookupDeveloperAppById
 } = require("../../db/supabase");
 
 const Freshbooks = require("../../helpers/freshbooks/freshbooks-wrapper");
 const Quickbooks = require("../../helpers/quickbooks/quickbooks-wrapper");
 const Xero = require("../../helpers/xero/xero-wrapper");
+const CustomApp = require("../../helpers/xrphone/custom-app-wrapper");
 
 const Sdk = new XummSdk();
 
@@ -107,6 +109,31 @@ module.exports = async (req, res) => {
           tenant_id: merchantAccountAppIntegration.tenant_id,
         });
         await xero.applyPaymentToInvoice(
+          customMeta.accountId,
+          customMeta.invoiceId,
+          customMeta.usdAmount,
+          customMeta.currency,
+          customMeta.xrpAmount,
+          customMeta.xphoAmount,
+          xrpTransactionId
+        );
+      }
+      // Custom app integration via XRPhone developer portal
+      else if (typeof customMeta.merchantAppIntegration === 'number') {
+        console.log(customMeta);
+        const {data: app } = await lookupDeveloperAppById(customMeta.merchantAppIntegration);
+        const {
+          data: {
+            phone_number,
+            app_integration: merchantAccountAppIntegration,
+          },
+        } = await lookupMerchantXrphoneAccount(customMeta.merchantPhoneNumber);
+        const customApp = new CustomApp(app, {
+          phone_number,
+          access_token: merchantAccountAppIntegration.access_token,
+          refresh_token: merchantAccountAppIntegration.refresh_token,
+        });
+        await customApp.applyPaymentToInvoice(
           customMeta.accountId,
           customMeta.invoiceId,
           customMeta.usdAmount,
