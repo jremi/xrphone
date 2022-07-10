@@ -140,7 +140,8 @@ module.exports = async (req, res) => {
           customMeta.currency,
           customMeta.xrpAmount,
           customMeta.xphoAmount,
-          xrpTransactionId
+          xrpTransactionId,
+          customMeta.customerPhoneNumber
         );
       }
     } else {
