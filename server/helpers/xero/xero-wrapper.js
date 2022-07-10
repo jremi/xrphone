@@ -2,6 +2,7 @@ const axios = require("axios");
 const { default: createAuthRefreshInterceptor } = require("axios-auth-refresh");
 const { updateMerchantXrphoneAccount } = require("../../db/supabase");
 const qs = require("qs");
+const moment = require("moment");
 
 const xeroBaseURL = 'https://api.xero.com/api.xro/2.0'
 
@@ -173,7 +174,7 @@ class Xero {
                 Account: {
                     Code: paymentMethodRefId
                 },
-                Date: "2022-07-02",
+                Date: moment().format("YYYY-MM-DD"),
                 Amount: usdAmount,
                 Reference: `Paid (${isXPHO ? `${xphoAmount} XPHO` : `${xrpAmount} XRP`}) via XRPhone - XRPL Transaction: ${xrpTransactionId}`
             },
