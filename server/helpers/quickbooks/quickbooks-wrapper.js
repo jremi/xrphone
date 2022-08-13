@@ -23,7 +23,7 @@ class Quickbooks {
     this.refresh_token = options.refresh_token || null;
     this.realm_id = options.realm_id || null;
     quickbooksApi.interceptors.request.use((request) => {
-      request.headers["Authorization"] = `Bearer ${this.access_token}`;
+      request.headers["Authorization"] = `Bearer ${options.access_token}`;
       return request;
     });
     createAuthRefreshInterceptor(quickbooksApi, this.authRefresh.bind(this));

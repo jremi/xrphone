@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
         },
       },
       {
-        say: `Hello! Welcome to XR Phone! 
+        say: `Welcome to XR Phone! 
         The fast and easy way to pay invoices!`,
       },
       {
@@ -76,35 +76,35 @@ module.exports = async (req, res) => {
                 },
               },
             },
-            {
-              question: "To pay with XRP press 1 followed by the pound sign. To pay with XPHO press 2 followed by the pound sign.",
-              name: "xrphone_token_currency",
-              type: "Twilio.NUMBER",
-              voice_digits: {
-                finish_on_key: '#'
-              },
-              barge: false,
-              validate: {
-                webhook: {
-                  url: `${process.env.SERVER_URL}/twilio/autopilot/tasks/action/collect/question/webhook`,
-                  method: "POST",
-                },
-                on_failure: {
-                  messages: [
-                    {
-                      say: "The token currency is required for make payment on your invoice.",
-                    },
-                    {
-                      say: "Lets try again.",
-                    },
-                  ],
-                  repeat_question: true,
-                },
-                on_success: {
-                  say: "Great!",
-                },
-              }
-            },
+            // {
+            //   question: "To pay with XRP press 1 followed by the pound sign. To pay with XPHO press 2 followed by the pound sign.",
+            //   name: "xrphone_token_currency",
+            //   type: "Twilio.NUMBER",
+            //   voice_digits: {
+            //     finish_on_key: '#'
+            //   },
+            //   barge: false,
+            //   validate: {
+            //     webhook: {
+            //       url: `${process.env.SERVER_URL}/twilio/autopilot/tasks/action/collect/question/webhook`,
+            //       method: "POST",
+            //     },
+            //     on_failure: {
+            //       messages: [
+            //         {
+            //           say: "The token currency is required for make payment on your invoice.",
+            //         },
+            //         {
+            //           say: "Lets try again.",
+            //         },
+            //       ],
+            //       repeat_question: true,
+            //     },
+            //     on_success: {
+            //       say: "Great!",
+            //     },
+            //   }
+            // },
             {
               question:
                 "Please say or enter the invoice number followed by pound key.",

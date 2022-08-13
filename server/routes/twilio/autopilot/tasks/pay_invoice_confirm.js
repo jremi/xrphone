@@ -14,7 +14,10 @@ module.exports = async (req, res) => {
   } = memory.merchantAccountHolder;
   const invoice = memory.invoice;
   const { CallSid } = memory.twilio.voice;
-  const { usdAmountToPay, tokenCurrency } = global.transactionCache.get(CallSid);
+  let { usdAmountToPay, tokenCurrency } = global.transactionCache.get(CallSid);
+  if (!tokenCurrency) {
+    tokenCurrency = 'XRP';
+  }
   const currentXrpUsdSpotPrice = await xrplOracle();
   const currentXphoXrpSpotPrice = await xphoOracle();
   const xrpAmount = (
@@ -23,6 +26,7 @@ module.exports = async (req, res) => {
   const xphoAmount = (
     parseFloat(usdAmountToPay) / (currentXrpUsdSpotPrice * currentXphoXrpSpotPrice)
   ).toFixed(2);
+
   const metadata = {
     type: "INVOICE_PAYMENT",
     customerPhoneNumber,

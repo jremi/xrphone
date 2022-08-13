@@ -223,6 +223,25 @@ const lookupDeveloperAppById = async (id) =>
     .single()
     .eq("id", id);
 
+/**
+* Create log entry for external listed XRPhone developer app integration webhook callback url request.
+*
+* @param {number} app_id - The custom external XRPhone developer app integration id.
+* @param {string} webhook_topic - The webhook topic of developer app integration webhook callback url.
+* @param {string} payload_json - The JSON payload string being sent to the external XRPhone developer app integration webhook callback url.
+* @param {string} response_status_code - The response status code returned from the webhook request attempt
+* @returns {Promise} - Promise object representing created regular XRPhone account
+*/
+const createDeveloperLogByAppId = async (app_id, webhook_topic, payload_json, response_status_code) => await supabase
+    .from("devportal_log").insert([
+      {
+        app_id,
+        webhook_topic,
+        payload_json,
+        response_status_code
+      }
+    ]);
+
 module.exports = {
   createRegularXrphoneAccount,
   createMerchantXrphoneAccount,
@@ -237,5 +256,6 @@ module.exports = {
   deleteMerchantXrphoneAccount,
   lookupDeveloperAppsSandboxedByMerchantNumber,
   lookupDeveloperAppsListed,
-  lookupDeveloperAppById
+  lookupDeveloperAppById,
+  createDeveloperLogByAppId
 };

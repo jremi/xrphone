@@ -61,7 +61,7 @@
                 {{ userSettings.xrpAccount }}
               </div>
             </b-field>
-            <b-field>
+            <b-field v-if="isMerchantAccount">
               <b-checkbox class="has-text-weight-bold" v-model="isCentralizedExchange">
                 Account on CEX (e.g: Uphold, KuCoin)
               </b-checkbox>
@@ -94,13 +94,13 @@
                       <a @click="disconnectAppIntegration" class="card-footer-item has-text-weight-bold">Disconnect</a>
                     </footer>
                   </div>
-                  <div v-if="userSettings.appIntegrationId === 'quickbooks'" class="card">
+                  <div v-else-if="userSettings.appIntegrationId === 'quickbooks'" class="card">
                     <img :src="appIntegrationLogo.quickbooks" class="app-integration-logo" />
                     <footer class="card-footer">
                       <a @click="disconnectAppIntegration" class="card-footer-item has-text-weight-bold">Disconnect</a>
                     </footer>
                   </div>
-                  <div v-if="userSettings.appIntegrationId === 'xero'" class="card">
+                  <div v-else-if="userSettings.appIntegrationId === 'xero'" class="card">
                     <div class="is-flex is-justify-content-center">
                       <img :src="appIntegrationLogo.xero" class="app-integration-logo xero-logo" />
                     </div>

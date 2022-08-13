@@ -15,7 +15,7 @@ class Freshbooks {
     this.access_token = options.access_token || null;
     this.refresh_token = options.refresh_token || null;
     freshbooksApi.interceptors.request.use((request) => {
-      request.headers["Authorization"] = `Bearer ${this.access_token}`;
+      request.headers["Authorization"] = `Bearer ${options.access_token}`;
       return request;
     });
     createAuthRefreshInterceptor(freshbooksApi, this.authRefresh.bind(this));

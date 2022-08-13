@@ -52,7 +52,7 @@ module.exports = function (
           },
         };
         if (merchantDestinationTag) {
-          transaction[DestinationTag] = parseInt(merchantDestinationTag)
+          transaction.txjson.DestinationTag = parseInt(merchantDestinationTag)
         }
         const payment = await Sdk.payload.create(transaction).catch(err => console.log('err', err));
         resolve(payment);

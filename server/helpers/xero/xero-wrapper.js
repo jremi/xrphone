@@ -23,7 +23,7 @@ class Xero {
         this.refresh_token = options.refresh_token || null;
         this.tenant_id = options.tenant_id || null;
         xeroApi.interceptors.request.use((request) => {
-            request.headers["Authorization"] = `Bearer ${this.access_token}`;
+            request.headers["Authorization"] = `Bearer ${options.access_token}`;
             return request;
         });
         createAuthRefreshInterceptor(xeroApi, this.authRefresh.bind(this));

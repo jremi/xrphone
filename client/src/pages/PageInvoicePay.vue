@@ -115,7 +115,7 @@ export default {
             },
             pageLoadError: false,
             usdAmountToPay: null,
-            currency: 'XPHO',
+            currency: 'XRP',
             showThankYou: false
         };
     },

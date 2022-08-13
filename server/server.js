@@ -117,6 +117,7 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`\n XRPhone Node.js Server v${version}\n`);
+  console.log(`  Server environment: ${chalk.bgCyanBright.black(` ${process.env.NODE_ENV} `)}\n`);
   console.log(`  Server running at:`);
   console.log(
     `  - Local:   ${chalk.cyan(`http://localhost:${chalk.bold(PORT)}/`)}`

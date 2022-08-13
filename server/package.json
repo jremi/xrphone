@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^1.22.6",
+    "auth0": "^2.42.0",
     "axios": "^0.21.4",
     "axios-auth-refresh": "^3.2.1",
     "connect-history-api-fallback": "github:jremi/connect-history-api-fallback",
