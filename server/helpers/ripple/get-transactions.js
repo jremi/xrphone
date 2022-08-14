@@ -12,6 +12,8 @@ async function getTransactions(xrpAddress, xrplNetwork) {
         : process.env.RIPPLE_XRP_WSS_FAUCET_TESTNET,
   });
   try {
+    // TODO: If the merchant address is using a destination tag then we need to 
+    // lookup the transactions from the exchange level account for the specific destination tag.
     await api.connect();
     const ledgerVersion = await api.getLedgerVersion();
     const transactions = await api.getTransactions(xrpAddress, {
