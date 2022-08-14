@@ -11,10 +11,7 @@ async function invoiceLookup(req, res) {
             }
             const { error, data } =
                 await lookupMerchantXrphoneAccountByQuickbooksRealmId(req.body.realmId);
-            if (error) {
-                res.json(error);
-                return;
-            }
+            if (error) return res.json(error);
             const { access_token, refresh_token, realm_id } = data.app_integration;
             const quickbooks = new Quickbooks({
                 access_token,

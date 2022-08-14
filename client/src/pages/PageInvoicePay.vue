@@ -1,7 +1,7 @@
 <template>
     <div id="page-invoice-pay-container">
         <div class="container">
-            <div v-if="pageLoadError">
+            <div v-if="pageLoadError" class="is-size-3">
                 Invoice not found
             </div>
             <div v-else-if="showThankYou">
@@ -130,9 +130,12 @@ export default {
                 realmId,
                 invoiceNumber,
             });
-            this.integration = integration;
-            this.invoice = data.invoice;
-            this.merchant = data.merchant;
+            if (!data.invoice) this.pageLoadError = true;
+            else {
+                this.integration = integration;
+                this.invoice = data.invoice;
+                this.merchant = data.merchant;
+            }
         } else {
             this.pageLoadError = true;
         }

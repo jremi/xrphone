@@ -152,13 +152,12 @@ const lookupMerchantXrphoneAccount = async (phone_number) => {
  * @param {string} realm_id - The Quickbooks realm id of merchant XRPhone account holder.
  * @returns {Promise} - Promise object representing merchant XRPhone account
  */
-const lookupMerchantXrphoneAccountByQuickbooksRealmId = async (realm_id) => {
-  return await supabase
+const lookupMerchantXrphoneAccountByQuickbooksRealmId = async (realm_id) =>
+  await supabase
     .from("account_merchant")
     .select()
     .single()
     .eq("app_integration->>realm_id", realm_id);
-}
 
 /**
  * Delete (Regular) XRPhone Account
