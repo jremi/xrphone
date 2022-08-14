@@ -1,14 +1,14 @@
 <template>
-    <div class="xumm-pay-modal modal-card" style="width: auto">
+    <div class="xumm-pay-modal modal-card has-text-centered" style="width: auto">
         <header class="modal-card-head">
-            <p class="modal-card-title has-text-centered"><b>Pay with Xumm Wallet</b></p>
+            <p class="modal-card-title"><b>Pay with Xumm Wallet</b></p>
         </header>
         <section class="modal-card-body">
             <img :src="qr_png" />
         </section>
         <footer class="modal-card-foot">
             <!-- <b-button label="Close" @click="$parent.close()" /> -->
-            <div class="payment-status font-weight-bold has-text-centered">
+            <div class="payment-status font-weight-bold">
                 <b>{{ status }}</b>
                 <img v-if="showSpinner" class="spinner-logo ml-2" src="@/assets/images/spinners/circles.svg" />
             </div>
